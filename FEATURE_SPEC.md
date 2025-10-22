@@ -4,9 +4,10 @@
 
 A private fitness tracking Progressive Web App (PWA) for two users to track strength training and running progress. The app supports dynamic exercise creation, quick workout logging during training sessions, progress visualization, and automatic Strava integration for running activities.
 
-**Target Users:** 2 users (you and your wife)
+**Target Users:** 2 users (Roman and Andrea)
 **Platforms:** Web (Cloudflare Pages) + Android (PWA installable)
 **Privacy:** Private app, no authentication required, users switch profiles via dropdown
+**Units:** Metric only (kg for weights, km for distances)
 
 ---
 
@@ -26,7 +27,7 @@ A private fitness tracking Progressive Web App (PWA) for two users to track stre
   - `total_volume`: Track total volume (sets × reps × weight)
 - **Quick Workout Logging:**
   - Exercise selection (dropdown)
-  - Smart set input: parse "3x5@80kg, 1x1@90kg" into multiple sets
+  - Smart set input: parse "3x5@80, 1x1@90" into multiple sets (all weights in kg)
   - Date field (defaults to today, editable for late entries)
   - Optional notes per set
 - **Progress Visualization:**
@@ -87,20 +88,16 @@ A private fitness tracking Progressive Web App (PWA) for two users to track stre
 #### `users`
 ```sql
 id                UUID PRIMARY KEY DEFAULT uuid_generate_v4()
-name              TEXT NOT NULL UNIQUE  -- "You" / "Wife"
-avatar_color      TEXT NOT NULL         -- Hex color for UI
-created_at        TIMESTAMP DEFAULT NOW()
+name              TEXT NOT NULL UNIQUE  -- "Roman" / "Andrea"
 ```
 
 #### `exercises`
 ```sql
 id                UUID PRIMARY KEY DEFAULT uuid_generate_v4()
-name              TEXT NOT NULL
+name              TEXT NOT NULL UNIQUE
 category          TEXT NOT NULL         -- "strength" | "running"
 metric_type       TEXT NOT NULL         -- "one_rep_max" | "max_consecutive" | "total_volume"
-created_by        UUID REFERENCES users(id)
-notes             TEXT
-created_at        TIMESTAMP DEFAULT NOW()
+notes             TEXT                  -- Optional description/form notes
 ```
 
 #### `workout_sets`
@@ -110,10 +107,9 @@ user_id           UUID NOT NULL REFERENCES users(id)
 exercise_id       UUID NOT NULL REFERENCES exercises(id)
 workout_date      DATE NOT NULL DEFAULT CURRENT_DATE
 reps              INT NOT NULL
-weight            DECIMAL(6,2)          -- Nullable for bodyweight exercises
+weight            DECIMAL(6,2)          -- kg, nullable for bodyweight exercises
 set_number        INT NOT NULL          -- Order within workout
 notes             TEXT
-created_at        TIMESTAMP DEFAULT NOW()
 ```
 
 #### `body_weight_logs`
@@ -122,7 +118,6 @@ id                UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 user_id           UUID NOT NULL REFERENCES users(id)
 date              DATE NOT NULL DEFAULT CURRENT_DATE
 weight            DECIMAL(5,2) NOT NULL  -- kg
-created_at        TIMESTAMP DEFAULT NOW()
 UNIQUE(user_id, date)
 ```
 
@@ -165,7 +160,7 @@ last_sync_at      TIMESTAMP
 - User switcher component (header dropdown)
 - Quick workout logging form:
   - Exercise dropdown (with "+ Add New" modal)
-  - Set input parser ("3x5@80kg" → multiple sets)
+  - Set input parser ("3x5@80" → multiple sets, all weights in kg)
   - Date picker (defaults to today)
 - Exercise management page (list, add, edit, delete)
 - Body weight logging form
@@ -278,7 +273,7 @@ last_sync_at      TIMESTAMP
 2. See exercise cards with charts (default: last 30 days)
 3. Click exercise card → detailed view with all sets
 4. Change date range (7/30/90 days)
-5. Switch to wife's profile (header dropdown)
+5. Switch to Andrea's profile (header dropdown)
 6. See her progress charts
 
 ### Flow 3: Connecting Strava
@@ -333,12 +328,12 @@ export async function handler(req) {
 ```
 
 ### Challenge 2: Set Input Parsing
-**Problem:** Need intuitive input for "3x5@80kg, 1x1@90kg" → structured data
+**Problem:** Need intuitive input for "3x5@80, 1x1@90" → structured data
 
 **Solution:**
-- Regex parser: `(\d+)x(\d+)(?:@([\d.]+)(kg|lbs)?)?`
-- Matches:
-  - "3x5@80kg" → 3 sets of 5 reps at 80kg
+- Regex parser: `(\d+)x(\d+)(?:@([\d.]+))?`
+- Matches (all weights in kg):
+  - "3x5@80" → 3 sets of 5 reps at 80kg
   - "5x5" → 5 sets of 5 reps (bodyweight)
   - "1x1@90" → 1 set of 1 rep at 90kg
 - Parse into array of sets, assign `set_number` (1, 2, 3...)
@@ -353,15 +348,15 @@ function parseSets(input, defaultWeight = null) {
   let setNumber = 1
 
   setGroups.forEach(group => {
-    const match = group.match(/(\d+)x(\d+)(?:@([\d.]+)(kg|lbs)?)?/)
+    const match = group.match(/(\d+)x(\d+)(?:@([\d.]+))?/)
     if (!match) return
 
-    const [_, numSets, reps, weight, unit] = match
+    const [_, numSets, reps, weight] = match
     for (let i = 0; i < parseInt(numSets); i++) {
       allSets.push({
         set_number: setNumber++,
         reps: parseInt(reps),
-        weight: weight ? parseFloat(weight) : defaultWeight
+        weight: weight ? parseFloat(weight) : defaultWeight  // kg
       })
     }
   })
@@ -448,7 +443,7 @@ STRAVA_CLIENT_SECRET=your-strava-client-secret
 ### Supabase Setup
 - [ ] Create new project (choose nearby region)
 - [ ] Run database schema SQL (create tables)
-- [ ] Insert initial user records (you + wife)
+- [ ] Insert initial user records (Roman + Andrea)
 - [ ] Copy API URL and anon key
 - [ ] Enable RLS policies (optional, since private app)
 
@@ -533,7 +528,7 @@ Since this is a private app for 2 users, success is qualitative:
 - Strava runs sync within 1 hour of completion
 - App loads in <2 seconds on mobile
 - Zero data loss (even if database issues, can restore from Supabase backups)
-- Wife actually uses it consistently (ultimate validation!)
+- Andrea actually uses it consistently (ultimate validation!)
 
 ---
 
