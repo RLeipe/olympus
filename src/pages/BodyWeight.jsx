@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useUser } from '../contexts/UserContext'
 import { supabase } from '../lib/supabase'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function BodyWeight() {
   const { currentUser } = useUser()
   const [weight, setWeight] = useState('')
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(new Date())
   const [logs, setLogs] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -38,11 +40,12 @@ export default function BodyWeight() {
     setLoading(true)
 
     try {
+      const formattedDate = date.toISOString().split('T')[0]
       const { error: insertError } = await supabase
         .from('body_weight_logs')
         .upsert({
           user_id: currentUser.id,
-          date,
+          date: formattedDate,
           weight: parseFloat(weight)
         }, {
           onConflict: 'user_id,date'
@@ -52,7 +55,7 @@ export default function BodyWeight() {
 
       // Success - reset and refresh
       setWeight('')
-      setDate(new Date().toISOString().split('T')[0])
+      setDate(new Date())
       fetchLogs()
       alert('Body weight logged successfully!')
     } catch (err) {
@@ -113,10 +116,10 @@ export default function BodyWeight() {
               <label className="block text-sm font-medium mb-2">
                 Date
               </label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+              <DatePicker
+                selected={date}
+                onChange={(selectedDate) => setDate(selectedDate)}
+                dateFormat="MMM d, yyyy"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
               />

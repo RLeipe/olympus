@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useUser } from '../contexts/UserContext'
 import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function QuickLog() {
   const { currentUser } = useUser()
@@ -11,7 +13,7 @@ export default function QuickLog() {
   const [numSets, setNumSets] = useState(1)
   const [reps, setReps] = useState('')
   const [weight, setWeight] = useState('')
-  const [workoutDate, setWorkoutDate] = useState(new Date().toISOString().split('T')[0])
+  const [workoutDate, setWorkoutDate] = useState(new Date())
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -60,11 +62,12 @@ export default function QuickLog() {
     try {
       // Create multiple sets with the same reps and weight
       const setsToInsert = []
+      const formattedDate = workoutDate.toISOString().split('T')[0]
       for (let i = 1; i <= numSets; i++) {
         setsToInsert.push({
           user_id: currentUser.id,
           exercise_id: selectedExercise,
-          workout_date: workoutDate,
+          workout_date: formattedDate,
           reps: parseInt(reps),
           weight: weight ? parseFloat(weight) : null,
           set_number: i,
@@ -83,7 +86,7 @@ export default function QuickLog() {
       setReps('')
       setWeight('')
       setNotes('')
-      setWorkoutDate(new Date().toISOString().split('T')[0])
+      setWorkoutDate(new Date())
       alert('Workout logged successfully!')
       navigate('/')
     } catch (err) {
@@ -109,7 +112,7 @@ export default function QuickLog() {
             <label className="block text-sm font-medium mb-2">
               Exercise
             </label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-stretch">
               <select
                 value={selectedExercise}
                 onChange={(e) => setSelectedExercise(e.target.value)}
@@ -126,7 +129,7 @@ export default function QuickLog() {
               <button
                 type="button"
                 onClick={() => setShowNewExercise(true)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center"
               >
                 + New
               </button>
@@ -186,10 +189,10 @@ export default function QuickLog() {
             <label className="block text-sm font-medium mb-2">
               Date
             </label>
-            <input
-              type="date"
-              value={workoutDate}
-              onChange={(e) => setWorkoutDate(e.target.value)}
+            <DatePicker
+              selected={workoutDate}
+              onChange={(date) => setWorkoutDate(date)}
+              dateFormat="MMM d, yyyy"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
