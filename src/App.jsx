@@ -3,7 +3,6 @@ import { UserProvider } from './contexts/UserContext'
 import Header from './components/Header'
 import Dashboard from './pages/Dashboard'
 import QuickLog from './pages/QuickLog'
-import Exercises from './pages/Exercises'
 import BodyWeight from './pages/BodyWeight'
 
 function App() {
@@ -15,7 +14,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/log" element={<QuickLog />} />
-            <Route path="/exercises" element={<Exercises />} />
             <Route path="/bodyweight" element={<BodyWeight />} />
           </Routes>
         </div>

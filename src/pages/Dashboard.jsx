@@ -101,45 +101,57 @@ export default function Dashboard() {
       )}
 
       {/* Exercise Charts */}
-      {exercises.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-500 mb-4">
-            No exercises yet. Start by logging your first workout!
-          </p>
-          <a
-            href="/log"
-            className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Log Workout
-          </a>
-        </div>
-      ) : (
-        <div className="space-y-8">
-          {exercises.map(exercise => {
-            const data = exerciseData[exercise.id] || []
+      {(() => {
+        // Filter to only show exercises with actual logged data
+        const exercisesWithData = exercises.filter(ex => {
+          const data = exerciseData[ex.id] || []
+          return data.length > 0
+        })
 
-            return (
-              <div key={exercise.id} className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">{exercise.name}</h2>
+        if (exercisesWithData.length === 0) {
+          return (
+            <div className="bg-white rounded-lg shadow p-8 text-center">
+              <p className="text-gray-500 mb-4">
+                No workouts logged yet. Start by logging your first workout!
+              </p>
+              <a
+                href="/log"
+                className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+              >
+                Log Workout
+              </a>
+            </div>
+          )
+        }
 
-                {exercise.metric_type === 'one_rep_max' ? (
-                  <WeightedExerciseChart
-                    data={data}
-                    exerciseName={exercise.name}
-                  />
-                ) : exercise.metric_type === 'max_consecutive' ? (
-                  <RepsExerciseChart
-                    data={data}
-                    exerciseName={exercise.name}
-                  />
-                ) : (
-                  <div className="text-gray-500">Unknown metric type</div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      )}
+        return (
+          <div className="space-y-8">
+            {exercisesWithData.map(exercise => {
+              const data = exerciseData[exercise.id] || []
+
+              return (
+                <div key={exercise.id} className="bg-white rounded-lg shadow-lg p-6">
+                  <h2 className="text-xl font-semibold mb-4">{exercise.name}</h2>
+
+                  {exercise.metric_type === 'one_rep_max' ? (
+                    <WeightedExerciseChart
+                      data={data}
+                      exerciseName={exercise.name}
+                    />
+                  ) : exercise.metric_type === 'max_consecutive' ? (
+                    <RepsExerciseChart
+                      data={data}
+                      exerciseName={exercise.name}
+                    />
+                  ) : (
+                    <div className="text-gray-500">Unknown metric type</div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )
+      })()}
     </div>
   )
 }
