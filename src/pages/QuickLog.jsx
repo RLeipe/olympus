@@ -261,9 +261,8 @@ function NewExerciseModal({ onClose, onSuccess }) {
               onChange={(e) => setMetricType(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="one_rep_max">1 Rep Max (Deadlift, Squat, Bench)</option>
-              <option value="max_consecutive">Max Consecutive Reps (Pull-ups, Push-ups)</option>
-              <option value="total_volume">Total Volume (sets × reps × weight)</option>
+              <option value="one_rep_max">Weighted (1RM, 5RM tracking)</option>
+              <option value="max_consecutive">Reps (max consecutive, total reps)</option>
             </select>
           </div>
 
