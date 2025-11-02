@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useUser } from '../contexts/UserContext'
 import { supabase } from '../lib/supabase'
-import { parseSets, validateSets } from '../utils/setParser'
 import { useNavigate } from 'react-router-dom'
 
 export default function QuickLog() {
@@ -9,7 +8,9 @@ export default function QuickLog() {
   const navigate = useNavigate()
   const [exercises, setExercises] = useState([])
   const [selectedExercise, setSelectedExercise] = useState('')
-  const [setsInput, setSetsInput] = useState('')
+  const [numSets, setNumSets] = useState(1)
+  const [reps, setReps] = useState('')
+  const [weight, setWeight] = useState('')
   const [workoutDate, setWorkoutDate] = useState(new Date().toISOString().split('T')[0])
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
@@ -44,27 +45,32 @@ export default function QuickLog() {
       return
     }
 
-    const sets = parseSets(setsInput)
-    const validation = validateSets(sets)
+    if (!reps || reps <= 0) {
+      setError('Please enter a valid number of reps')
+      return
+    }
 
-    if (!validation.valid) {
-      setError(validation.error)
+    if (!numSets || numSets <= 0) {
+      setError('Please enter a valid number of sets')
       return
     }
 
     setLoading(true)
 
     try {
-      // Prepare sets for insertion
-      const setsToInsert = sets.map(set => ({
-        user_id: currentUser.id,
-        exercise_id: selectedExercise,
-        workout_date: workoutDate,
-        reps: set.reps,
-        weight: set.weight,
-        set_number: set.set_number,
-        notes: notes || null
-      }))
+      // Create multiple sets with the same reps and weight
+      const setsToInsert = []
+      for (let i = 1; i <= numSets; i++) {
+        setsToInsert.push({
+          user_id: currentUser.id,
+          exercise_id: selectedExercise,
+          workout_date: workoutDate,
+          reps: parseInt(reps),
+          weight: weight ? parseFloat(weight) : null,
+          set_number: i,
+          notes: notes || null
+        })
+      }
 
       const { error: insertError } = await supabase
         .from('workout_sets')
@@ -73,7 +79,9 @@ export default function QuickLog() {
       if (insertError) throw insertError
 
       // Success - reset form
-      setSetsInput('')
+      setNumSets(1)
+      setReps('')
+      setWeight('')
       setNotes('')
       setWorkoutDate(new Date().toISOString().split('T')[0])
       alert('Workout logged successfully!')
@@ -125,22 +133,52 @@ export default function QuickLog() {
             </div>
           </div>
 
-          {/* Sets Input */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Sets (e.g., "3x5@80, 1x1@90" or "5x5" for bodyweight)
-            </label>
-            <input
-              type="text"
-              value={setsInput}
-              onChange={(e) => setSetsInput(e.target.value)}
-              placeholder="3x5@80, 1x1@90"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Format: [sets]x[reps]@[weight]. Separate multiple groups with commas.
-            </p>
+          {/* Sets, Reps, Weight Input */}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Sets
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={numSets}
+                onChange={(e) => setNumSets(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Reps
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={reps}
+                onChange={(e) => setReps(e.target.value)}
+                placeholder="5"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Weight (kg)
+              </label>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="80"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Optional for bodyweight</p>
+            </div>
           </div>
 
           {/* Date */}

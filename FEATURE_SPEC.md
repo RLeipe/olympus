@@ -27,9 +27,10 @@ A private fitness tracking Progressive Web App (PWA) for two users to track stre
   - `total_volume`: Track total volume (sets × reps × weight)
 - **Quick Workout Logging:**
   - Exercise selection (dropdown)
-  - Smart set input: parse "3x5@80, 1x1@90" into multiple sets (all weights in kg)
+  - Three input fields: Sets (default: 1), Reps, Weight (kg, optional for bodyweight)
+  - Creates multiple identical sets automatically
   - Date field (defaults to today, editable for late entries)
-  - Optional notes per set
+  - Optional notes per workout
 - **Progress Visualization:**
   - Charts showing metric trends over time (per exercise)
   - Historical workout log
