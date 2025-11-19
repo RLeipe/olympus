@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import RecentLogs from '../components/RecentLogs'
 
 export default function QuickLog() {
   const { currentUser } = useUser()
@@ -18,10 +19,14 @@ export default function QuickLog() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showNewExercise, setShowNewExercise] = useState(false)
+  const [recentLogs, setRecentLogs] = useState([])
 
   useEffect(() => {
     fetchExercises()
-  }, [])
+    if (currentUser) {
+      fetchRecentLogs()
+    }
+  }, [currentUser])
 
   async function fetchExercises() {
     try {
@@ -35,6 +40,23 @@ export default function QuickLog() {
       setExercises(data || [])
     } catch (err) {
       console.error('Error fetching exercises:', err)
+    }
+  }
+
+  async function fetchRecentLogs() {
+    try {
+      const { data, error } = await supabase
+        .from('workout_sets')
+        .select('*, exercises(name, metric_type)')
+        .eq('user_id', currentUser.id)
+        .order('workout_date', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(10)
+
+      if (error) throw error
+      setRecentLogs(data || [])
+    } catch (err) {
+      console.error('Error fetching recent logs:', err)
     }
   }
 
@@ -81,14 +103,14 @@ export default function QuickLog() {
 
       if (insertError) throw insertError
 
-      // Success - reset form
+      // Success - reset form and refresh recent logs
       setNumSets(1)
       setReps('')
       setWeight('')
       setNotes('')
       setWorkoutDate(new Date())
+      fetchRecentLogs()
       alert('Workout logged successfully!')
-      navigate('/')
     } catch (err) {
       console.error('Error logging workout:', err)
       setError('Failed to log workout: ' + err.message)
@@ -306,6 +328,11 @@ export default function QuickLog() {
             {loading ? 'Logging...' : 'Log Workout'}
           </button>
         </form>
+      </div>
+
+      {/* Recent Logs */}
+      <div className="mt-8">
+        <RecentLogs workoutSets={recentLogs} onDelete={fetchRecentLogs} />
       </div>
 
       {/* New Exercise Modal (simple version) */}

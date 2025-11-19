@@ -9,7 +9,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center gap-4">
           {/* Navigation */}
-          <nav className="flex items-center gap-3 md:gap-8 flex-wrap">
+          <nav className="flex items-center gap-3 md:gap-6 flex-wrap">
             <Link
               to="/"
               className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base tracking-wide"
@@ -18,7 +18,7 @@ export default function Header() {
             </Link>
             <Link
               to="/log"
-              className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base tracking-wide"
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg font-semibold transition-all text-sm md:text-base tracking-wide border border-white/30 shadow-sm"
             >
               Log
             </Link>
