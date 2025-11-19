@@ -409,7 +409,7 @@ function NewExerciseModal({ onClose, onSuccess }) {
             >
               <option value="one_rep_max">Weighted (1RM, 5RM tracking)</option>
               <option value="max_consecutive">Reps (max consecutive, total reps)</option>
-              <option value="time_based">Time-based (planks, dead hangs - duration in seconds)</option>
+              <option value="time_based">Time-based (duration)</option>
             </select>
           </div>
 

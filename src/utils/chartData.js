@@ -85,7 +85,7 @@ export function aggregateRepsExercise(workoutSets) {
 }
 
 /**
- * Aggregates workout sets into chart data for time-based exercises (planks, dead hangs)
+ * Aggregates workout sets into chart data for time-based exercises
  * Groups by date and calculates max duration and total duration
  *
  * @param {Array} workoutSets - Array of workout_sets from Supabase
