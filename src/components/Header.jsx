@@ -17,16 +17,16 @@ export default function Header() {
               Dashboard
             </Link>
             <Link
-              to="/log"
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg font-semibold transition-all text-sm md:text-base tracking-wide border border-white/30 shadow-sm"
-            >
-              Log
-            </Link>
-            <Link
               to="/bodyweight"
               className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base whitespace-nowrap tracking-wide"
             >
               Body Weight
+            </Link>
+            <Link
+              to="/log"
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg font-semibold transition-all text-sm md:text-base tracking-wide border border-white/30 shadow-sm"
+            >
+              Log
             </Link>
           </nav>
 
