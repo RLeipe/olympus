@@ -1,16 +1,19 @@
 import { useUser } from '../contexts/UserContext'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { aggregateWeightedExercise, aggregateRepsExercise } from '../utils/chartData'
+import { aggregateWeightedExercise, aggregateRepsExercise, aggregateTimeBasedExercise } from '../utils/chartData'
 import WeightedExerciseChart from '../components/WeightedExerciseChart'
 import RepsExerciseChart from '../components/RepsExerciseChart'
+import TimeBasedExerciseChart from '../components/TimeBasedExerciseChart'
 import BodyWeightChart from '../components/BodyWeightChart'
+import RecentLogs from '../components/RecentLogs'
 
 export default function Dashboard() {
   const { currentUser } = useUser()
   const [exercises, setExercises] = useState([])
   const [exerciseData, setExerciseData] = useState({})
   const [bodyWeightData, setBodyWeightData] = useState([])
+  const [recentLogs, setRecentLogs] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -50,6 +53,8 @@ export default function Dashboard() {
           dataByExercise[exercise.id] = aggregateWeightedExercise(setsData || [])
         } else if (exercise.metric_type === 'max_consecutive') {
           dataByExercise[exercise.id] = aggregateRepsExercise(setsData || [])
+        } else if (exercise.metric_type === 'time_based') {
+          dataByExercise[exercise.id] = aggregateTimeBasedExercise(setsData || [])
         }
       }
 
@@ -64,6 +69,17 @@ export default function Dashboard() {
 
       if (weightError) throw weightError
       setBodyWeightData(weightData || [])
+
+      // Fetch recent workout logs (last 10)
+      const { data: recentLogsData, error: recentLogsError } = await supabase
+        .from('workout_sets')
+        .select('*, exercises(name, metric_type)')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      if (recentLogsError) throw recentLogsError
+      setRecentLogs(recentLogsData || [])
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
@@ -91,6 +107,11 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold mb-8">
         {currentUser.name}'s Progress
       </h1>
+
+      {/* Recent Logs */}
+      <div className="mb-8">
+        <RecentLogs workoutSets={recentLogs} onDelete={fetchDashboardData} />
+      </div>
 
       {/* Body Weight Chart */}
       {bodyWeightData.length > 0 && (
@@ -140,6 +161,11 @@ export default function Dashboard() {
                     />
                   ) : exercise.metric_type === 'max_consecutive' ? (
                     <RepsExerciseChart
+                      data={data}
+                      exerciseName={exercise.name}
+                    />
+                  ) : exercise.metric_type === 'time_based' ? (
+                    <TimeBasedExerciseChart
                       data={data}
                       exerciseName={exercise.name}
                     />

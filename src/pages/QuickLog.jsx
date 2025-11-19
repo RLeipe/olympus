@@ -136,53 +136,131 @@ export default function QuickLog() {
             </div>
           </div>
 
-          {/* Sets, Reps, Weight Input */}
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Sets
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={numSets}
-                onChange={(e) => setNumSets(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                required
-              />
-            </div>
+          {/* Dynamic Input Fields based on Exercise Type */}
+          {(() => {
+            const selectedEx = exercises.find(ex => ex.id === selectedExercise)
+            const metricType = selectedEx?.metric_type
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Reps
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={reps}
-                onChange={(e) => setReps(e.target.value)}
-                placeholder="5"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                required
-              />
-            </div>
+            if (metricType === 'time_based') {
+              // Time-based exercises: Sets + Duration (seconds)
+              return (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Sets
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={numSets}
+                      onChange={(e) => setNumSets(e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Weight (kg)
-              </label>
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                placeholder="80"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <p className="text-xs text-gray-500 mt-1">Optional for bodyweight</p>
-            </div>
-          </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Duration (seconds)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={reps}
+                      onChange={(e) => setReps(e.target.value)}
+                      placeholder="60"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+              )
+            } else if (metricType === 'max_consecutive') {
+              // Reps-based exercises: Sets + Reps
+              return (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Sets
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={numSets}
+                      onChange={(e) => setNumSets(e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Reps
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={reps}
+                      onChange={(e) => setReps(e.target.value)}
+                      placeholder="5"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+              )
+            } else {
+              // Weighted exercises: Sets + Reps + Weight
+              return (
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Sets
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={numSets}
+                      onChange={(e) => setNumSets(e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Reps
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={reps}
+                      onChange={(e) => setReps(e.target.value)}
+                      placeholder="5"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Weight (kg)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.5"
+                      min="0"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      placeholder="80"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Optional for bodyweight</p>
+                  </div>
+                </div>
+              )
+            }
+          })()}
 
           {/* Date */}
           <div>
@@ -304,6 +382,7 @@ function NewExerciseModal({ onClose, onSuccess }) {
             >
               <option value="one_rep_max">Weighted (1RM, 5RM tracking)</option>
               <option value="max_consecutive">Reps (max consecutive, total reps)</option>
+              <option value="time_based">Time-based (planks, dead hangs - duration in seconds)</option>
             </select>
           </div>
 

@@ -85,6 +85,45 @@ export function aggregateRepsExercise(workoutSets) {
 }
 
 /**
+ * Aggregates workout sets into chart data for time-based exercises (planks, dead hangs)
+ * Groups by date and calculates max duration and total duration
+ *
+ * @param {Array} workoutSets - Array of workout_sets from Supabase
+ * @returns {Array} Chart data with { date, maxDuration, totalDuration }
+ */
+export function aggregateTimeBasedExercise(workoutSets) {
+  // Group by date
+  const byDate = {}
+
+  workoutSets.forEach(set => {
+    const date = set.workout_date
+    if (!byDate[date]) {
+      byDate[date] = []
+    }
+    byDate[date].push(set)
+  })
+
+  // Calculate metrics per date
+  const chartData = Object.entries(byDate).map(([date, sets]) => {
+    // Max duration: highest duration (stored in reps field) in any single set
+    const maxDuration = Math.max(...sets.map(s => s.reps))
+
+    // Total duration: sum of all durations
+    const totalDuration = sets.reduce((sum, s) => sum + s.reps, 0)
+
+    return {
+      date,
+      maxDuration,
+      totalDuration,
+      sets // Keep original sets for tooltip
+    }
+  })
+
+  // Sort by date
+  return chartData.sort((a, b) => new Date(a.date) - new Date(b.date))
+}
+
+/**
  * Formats a date for display in charts
  * @param {string} dateString - ISO date string
  * @returns {string} Formatted date (e.g., "Jan 15")
