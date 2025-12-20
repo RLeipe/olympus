@@ -49,7 +49,7 @@ export default function RepsExerciseChart({ data, exerciseName }) {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <ComposedChart data={data} margin={{ top: 20, right: 60, left: 20, bottom: 20 }}>
+      <ComposedChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
 
         <XAxis

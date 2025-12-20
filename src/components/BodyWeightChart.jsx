@@ -42,7 +42,7 @@ export default function BodyWeightChart({ data, userName }) {
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+      <LineChart data={chartData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
 
         <XAxis
