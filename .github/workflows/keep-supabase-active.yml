@@ -1,0 +1,21 @@
+name: Keep Supabase Active
+
+on:
+  schedule:
+    # Run every 3 days at 10:00 AM UTC
+    - cron: '0 10 */3 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Query Supabase to keep it active
+        run: |
+          curl -X GET \
+            "${{ secrets.VITE_SUPABASE_URL }}/rest/v1/users?select=count" \
+            -H "apikey: ${{ secrets.VITE_SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.VITE_SUPABASE_ANON_KEY }}"
+
+          echo "✓ Supabase pinged successfully at $(date)"
