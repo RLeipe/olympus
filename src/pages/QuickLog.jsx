@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import RecentLogs from '../components/RecentLogs'
+import DayNoteEditor from '../components/DayNoteEditor'
+import { toISODate } from '../utils/dates'
 
 export default function QuickLog() {
   const { currentUser } = useUser()
@@ -15,7 +17,8 @@ export default function QuickLog() {
   const [reps, setReps] = useState('')
   const [weight, setWeight] = useState('')
   const [workoutDate, setWorkoutDate] = useState(new Date())
-  const [notes, setNotes] = useState('')
+  const [dayNote, setDayNote] = useState('')
+  const [noteSaved, setNoteSaved] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showNewExercise, setShowNewExercise] = useState(false)
@@ -27,6 +30,25 @@ export default function QuickLog() {
       fetchRecentLogs()
     }
   }, [currentUser])
+
+  useEffect(() => {
+    if (currentUser) fetchDayNote()
+  }, [currentUser, workoutDate])
+
+  async function fetchDayNote() {
+    setNoteSaved(false)
+    const { data, error } = await supabase
+      .from('day_notes')
+      .select('note')
+      .eq('user_id', currentUser.id)
+      .eq('date', toISODate(workoutDate))
+      .maybeSingle()
+    if (error) {
+      console.error('Error fetching day note:', error)
+      return
+    }
+    setDayNote(data?.note || '')
+  }
 
   async function fetchExercises() {
     try {
@@ -84,7 +106,7 @@ export default function QuickLog() {
     try {
       // Create multiple sets with the same reps and weight
       const setsToInsert = []
-      const formattedDate = workoutDate.toISOString().split('T')[0]
+      const formattedDate = toISODate(workoutDate)
       for (let i = 1; i <= numSets; i++) {
         setsToInsert.push({
           user_id: currentUser.id,
@@ -92,8 +114,7 @@ export default function QuickLog() {
           workout_date: formattedDate,
           reps: parseInt(reps),
           weight: weight ? parseFloat(weight) : null,
-          set_number: i,
-          notes: notes || null
+          set_number: i
         })
       }
 
@@ -107,8 +128,6 @@ export default function QuickLog() {
       setNumSets(1)
       setReps('')
       setWeight('')
-      setNotes('')
-      setWorkoutDate(new Date())
       fetchRecentLogs()
       alert('Workout logged successfully!')
     } catch (err) {
@@ -298,20 +317,6 @@ export default function QuickLog() {
             />
           </div>
 
-          {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Notes (optional)
-            </label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="How did it feel?"
-              rows={3}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
@@ -328,6 +333,23 @@ export default function QuickLog() {
             {loading ? 'Logging...' : 'Log Workout'}
           </button>
         </form>
+      </div>
+
+      {/* Session note for the selected date */}
+      <div className="bg-white rounded-lg shadow p-6 mt-6">
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-lg font-semibold">Session note</h2>
+          <span className="text-sm text-gray-500">
+            {workoutDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}
+          </span>
+        </div>
+        <DayNoteEditor
+          userId={currentUser.id}
+          date={toISODate(workoutDate)}
+          initialNote={dayNote}
+          onSaved={(saved) => { setDayNote(saved); setNoteSaved(true) }}
+        />
+        {noteSaved && <p className="text-sm text-emerald-600 mt-2">Note saved.</p>}
       </div>
 
       {/* Recent Logs */}

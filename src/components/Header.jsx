@@ -6,29 +6,37 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-xl border-b border-blue-800/20">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center gap-4">
+      <div className="container mx-auto px-3 md:px-4 py-4">
+        <div className="flex justify-between items-center gap-2 md:gap-4">
           {/* Left Navigation */}
           <nav className="flex items-center gap-3 md:gap-6 flex-wrap">
             <Link
               to="/"
               className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base tracking-wide"
             >
-              Dashboard
+              <span className="md:hidden">Stats</span>
+              <span className="hidden md:inline">Dashboard</span>
+            </Link>
+            <Link
+              to="/calendar"
+              className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base tracking-wide"
+            >
+              Calendar
             </Link>
             <Link
               to="/bodyweight"
               className="font-semibold hover:text-blue-100 transition-colors text-sm md:text-base whitespace-nowrap tracking-wide"
             >
-              Body Weight
+              <span className="md:hidden">Weight</span>
+              <span className="hidden md:inline">Body Weight</span>
             </Link>
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-3 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <Link
               to="/log"
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg font-semibold transition-all text-sm md:text-base tracking-wide border border-white/30 shadow-sm"
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 md:px-4 py-2 rounded-lg font-semibold transition-all text-sm md:text-base tracking-wide border border-white/30 shadow-sm"
             >
               Log
             </Link>
@@ -39,7 +47,7 @@ export default function Header() {
                   const user = users.find(u => u.id === e.target.value)
                   setCurrentUser(user)
                 }}
-                className="bg-white/10 backdrop-blur-sm text-white font-medium px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm hover:bg-white/20 transition-colors cursor-pointer"
+                className="bg-white/10 backdrop-blur-sm text-white font-medium px-2 md:px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm hover:bg-white/20 transition-colors cursor-pointer"
               >
                 {users.map(user => (
                   <option key={user.id} value={user.id} className="bg-blue-700 text-white">

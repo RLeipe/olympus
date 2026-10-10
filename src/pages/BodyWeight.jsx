@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useUser } from '../contexts/UserContext'
 import { supabase } from '../lib/supabase'
+import { toISODate } from '../utils/dates'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -40,7 +41,7 @@ export default function BodyWeight() {
     setLoading(true)
 
     try {
-      const formattedDate = date.toISOString().split('T')[0]
+      const formattedDate = toISODate(date)
       const { error: insertError } = await supabase
         .from('body_weight_logs')
         .upsert({

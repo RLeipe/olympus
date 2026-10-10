@@ -204,41 +204,36 @@ If you want to use your own domain instead of `*.pages.dev`:
 
 ---
 
-## Step 3: Strava API Setup (Phase 3 - Can Wait)
+## Step 3: Strava Sync and Training Plan
 
-**You can skip this for now!** We'll set this up when we implement Phase 3 (Strava integration).
+1. **Run the database migration:** paste `supabase/migrations/002_plan_notes_strava.sql`
+   into the Supabase SQL Editor and run it. It adds `day_notes` and `activities` and locks
+   `strava_connections` so the public anon key can't read Strava tokens.
 
-When you're ready (Phase 3):
-
-1. **Go to [developers.strava.com](https://www.strava.com/settings/api)**
-
-2. **Click "Create an App"** (need a Strava account)
-
-3. **Fill in the form:**
+2. **Create a Strava API app** at [strava.com/settings/api](https://www.strava.com/settings/api):
    ```
-   Application Name: Fitness Tracker
-   Category: Training
-   Club: (leave empty)
-   Website: https://your-domain.com (or pages.dev URL)
-   Authorization Callback Domain: your-domain.com (just the domain, no https://)
+   Website: https://olympus.romanleipe.com
+   Authorization Callback Domain: olympus.romanleipe.com
    ```
+   Note the Client ID and Client Secret.
 
-4. **Click "Create"**
-
-5. **Copy your credentials:**
+3. **Add runtime variables in Cloudflare** (project → Settings → Variables and Secrets).
+   Use the "Encrypt"/secret type for the two secrets:
    ```
-   Client ID: 12345 (6 digit number)
-   Client Secret: abc123...xyz (long string)
+   STRAVA_CLIENT_ID          = <Client ID>
+   STRAVA_CLIENT_SECRET      = <Client Secret>          (secret)
+   SUPABASE_SERVICE_ROLE_KEY = <Supabase service_role / secret key>  (secret)
+   SUPABASE_URL              = <same value as VITE_SUPABASE_URL>
    ```
+   The service role key is in Supabase → Project Settings → API Keys. It bypasses all
+   security rules, so it only ever goes into Cloudflare, never into the repo or the frontend.
 
-6. **Add Client ID to Cloudflare Pages:**
-   - Go to Cloudflare Pages → your project → Settings → Environment variables
-   - Add: `VITE_STRAVA_CLIENT_ID = 12345` (your client ID)
-   - Redeploy the app
+4. **Redeploy**, open the Calendar page as Roman and click **Connect Strava**.
+   The first sync imports the last 60 days; laps for runs are fetched 20 per sync.
 
-7. **Add Client Secret to Supabase:**
-   - Go to Supabase → Project Settings → Edge Functions (when we create them)
-   - We'll handle this in Phase 3
+5. **Optional, for planning sessions with Claude:** add `SUPABASE_ACCESS_TOKEN` and
+   `SUPABASE_PROJECT_REF` (the same values as the GitHub keep-alive secrets) as environment
+   variables in the Claude Code environment, so `npm run snapshot` can read training data.
 
 ---
 

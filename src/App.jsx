@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Dashboard from './pages/Dashboard'
 import QuickLog from './pages/QuickLog'
 import BodyWeight from './pages/BodyWeight'
+import Calendar from './pages/Calendar'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/calendar" element={<Calendar />} />
             <Route path="/log" element={<QuickLog />} />
             <Route path="/bodyweight" element={<BodyWeight />} />
           </Routes>
