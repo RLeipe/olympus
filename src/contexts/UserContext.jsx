@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 const UserContext = createContext()
+const DEFAULT_USER = 'Roman'
 
 export function UserProvider({ children }) {
   const [users, setUsers] = useState([])
@@ -22,9 +23,9 @@ export function UserProvider({ children }) {
       if (error) throw error
 
       setUsers(data)
-      // Default to first user (Andrea comes before Roman alphabetically)
+      // Roman uses the app most, so he is the default
       if (data.length > 0) {
-        setCurrentUser(data[0])
+        setCurrentUser(data.find(u => u.name === DEFAULT_USER) || data[0])
       }
     } catch (error) {
       console.error('Error fetching users:', error)
