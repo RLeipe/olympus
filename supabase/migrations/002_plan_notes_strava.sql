@@ -13,6 +13,12 @@ CREATE TABLE IF NOT EXISTS day_notes (
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON day_notes TO anon, authenticated;
 
+-- The app has no login, so notes are open like the other app tables.
+-- RLS is enabled with an allow-all policy so Supabase doesn't warn about it.
+ALTER TABLE day_notes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "day notes are open" ON day_notes;
+CREATE POLICY "day notes are open" ON day_notes FOR ALL USING (true) WITH CHECK (true);
+
 -- Activities synced from Strava (runs, rides, hikes, ...)
 -- Written only by the server-side sync function; the app can read them.
 CREATE TABLE IF NOT EXISTS activities (
