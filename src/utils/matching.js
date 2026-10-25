@@ -11,7 +11,8 @@ const STRENGTH_SPORTS = ['WeightTraining', 'Workout', 'Crossfit']
 const MATCH_OFFSETS = [0, -1, 1]
 const DISTANCE_TOLERANCE = 0.9
 const LAP_DISTANCE_TOLERANCE = 0.15
-const LAP_PACE_SLACK_S = 10
+const LAP_DURATION_TOLERANCE = 0.15
+const LAP_PACE_SLACK_S = 15
 
 // workoutSets: rows with exercises(name, metric_type); activities: rows from the activities table
 export function buildActuals(workoutSets, activities) {
@@ -106,18 +107,25 @@ function evaluateRun(session, activity) {
   return { status: issues.length ? 'partial' : 'done', issues, flags, intervals }
 }
 
-// Work intervals = laps close to the planned rep distance that were run fast
+// Work intervals = laps close to the planned rep distance (or duration) that were run fast
 export function detectIntervals(activity, plan) {
   const laps = activity.laps || []
   const targetPace = plan.pace ? paceToSeconds(plan.pace) : null
   const overallSpeed = activity.avg_speed || 0
 
   return laps.filter(lap => {
-    const distanceOk = Math.abs(lap.distance_m - plan.distance_m) <= Math.max(plan.distance_m * LAP_DISTANCE_TOLERANCE, 50)
-    if (!distanceOk || !lap.avg_speed) return false
+    if (!lapLengthOk(lap, plan) || !lap.avg_speed) return false
     if (targetPace) return 1000 / lap.avg_speed <= targetPace + LAP_PACE_SLACK_S
     return lap.avg_speed >= overallSpeed * 1.05
   })
+}
+
+function lapLengthOk(lap, plan) {
+  if (plan.duration_s) {
+    const seconds = lap.elapsed_time_s ?? lap.moving_time_s
+    return seconds != null && Math.abs(seconds - plan.duration_s) <= Math.max(plan.duration_s * LAP_DURATION_TOLERANCE, 10)
+  }
+  return Math.abs(lap.distance_m - plan.distance_m) <= Math.max(plan.distance_m * LAP_DISTANCE_TOLERANCE, 50)
 }
 
 function evaluateStrength(session, actual) {

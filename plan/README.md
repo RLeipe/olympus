@@ -40,9 +40,18 @@ sessions:
     distance_km: 9            # total including warm-up and cool-down
     intervals:
       reps: 6
-      distance_m: 800
+      distance_m: 800         # rep length by distance, or use duration_s instead
       pace: "4:10"            # optional target pace per km, quoted
       recovery: 90s jog       # optional, free text
+
+  - date: 2026-11-10
+    type: run
+    kind: intervals
+    distance_km: 7
+    intervals:
+      reps: 10
+      duration_s: 60          # rep length by time (exactly one of distance_m / duration_s)
+      recovery: 1 min jog
 
   - date: 2026-11-07
     type: run
@@ -73,8 +82,9 @@ npm run check-plan
 - **Strength**: sets logged in the app on that day. A planned set counts when a logged set
   has at least the planned reps/seconds and weight.
 - **Run**: a Strava run (Run, TrailRun, VirtualRun). Done when the distance reaches 90% of
-  the plan. For intervals, laps of roughly the rep distance at the target pace (or clearly
-  faster than the run's average) count as reps, so record intervals with laps.
+  the plan. For intervals, laps of roughly the rep distance (or rep duration) at the target
+  pace (up to 15 s/km slower still counts, e.g. for a slight uphill) or, without a target
+  pace, clearly faster than the run's average count as reps, so record intervals with laps.
 - **Other**: any other Strava activity type.
 - A session done one day early or late still counts and is shown as "Done Tue" etc.
 - Anything done without a matching plan entry shows as "Unplanned".

@@ -1,4 +1,4 @@
-import { formatPace } from '../../utils/planCore'
+import { formatPace, intervalRepLength } from '../../utils/planCore'
 
 // Brass means done. tile: session box with a colored left edge, chip: outlined status label (text color),
 // marker: month-grid square
@@ -54,7 +54,7 @@ export function runTarget(session) {
   if (session.pace) parts.push(`${session.pace}/km`)
   if (session.intervals) {
     const iv = session.intervals
-    let text = `${iv.reps} × ${iv.distance_m} m`
+    let text = `${iv.reps} × ${intervalRepLength(iv)}`
     if (iv.pace) text += ` @ ${iv.pace}`
     if (iv.recovery) text += `, ${iv.recovery}`
     parts.push(text)

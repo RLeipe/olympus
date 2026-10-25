@@ -7,7 +7,7 @@
 // Needs SUPABASE_URL and SUPABASE_ANON_KEY (or the VITE_-prefixed names) in the environment.
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { parsePlanFile, mergePlans, formatPace } from '../src/utils/planCore.js'
+import { parsePlanFile, mergePlans, formatPace, intervalRepLength } from '../src/utils/planCore.js'
 import { buildActuals, matchPlan, RUN_SPORTS } from '../src/utils/matching.js'
 import { addDays, addMonths, startOfMonth, startOfWeek, today, parseISODate } from '../src/utils/dates.js'
 
@@ -146,7 +146,7 @@ function describePlan(s) {
     return `strength: ${s.exercises.map(e => `${e.name} ${e.sets}x${e.seconds !== undefined ? `${e.seconds}s` : e.reps}${e.weight ? `@${e.weight}` : ''}`).join(', ')}`
   }
   if (s.type === 'run') {
-    const iv = s.intervals ? `, ${s.intervals.reps}x${s.intervals.distance_m}m${s.intervals.pace ? `@${s.intervals.pace}` : ''}` : ''
+    const iv = s.intervals ? `, ${s.intervals.reps}x${intervalRepLength(s.intervals)}${s.intervals.pace ? `@${s.intervals.pace}` : ''}` : ''
     return `${s.kind} run ${s.distance_km ?? '?'} km${s.max_hr ? `, HR<${s.max_hr}` : ''}${s.pace ? `, ${s.pace}/km` : ''}${iv}`
   }
   return `${s.type}${s.title ? `: ${s.title}` : ''}`
@@ -162,7 +162,7 @@ function describeActual(a) {
   if (km > 0.5) parts.push(`${formatPace(x.moving_time_s / km)}/km`)
   if (x.avg_hr) parts.push(`HR ${Math.round(x.avg_hr)}/${Math.round(x.max_hr)}`)
   if (x.elevation_m) parts.push(`+${Math.round(x.elevation_m)} m`)
-  if (x.laps?.length > 1) parts.push(`laps ${x.laps.map(l => `${Math.round(l.distance_m)}m@${formatPace(1000 / l.avg_speed)}`).join(' ')}`)
+  if (x.laps?.length > 1) parts.push(`laps ${x.laps.map(l => `${Math.round(l.distance_m)}m/${Math.round(l.elapsed_time_s ?? l.moving_time_s)}s@${formatPace(1000 / l.avg_speed)}`).join(' ')}`)
   return parts.join(', ')
 }
 
