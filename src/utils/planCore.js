@@ -13,9 +13,15 @@ const SESSION_KEYS = {
   rest: []
 }
 const EXERCISE_KEYS = ['name', 'sets', 'reps', 'weight', 'seconds', 'notes']
-const INTERVAL_KEYS = ['reps', 'distance_m', 'pace', 'recovery']
+const INTERVAL_KEYS = ['reps', 'distance_m', 'duration_s', 'pace', 'recovery']
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const PACE_RE = /^\d{1,2}:\d{2}$/
+
+// "800 m", "1 min" or "90 s": the length of one interval rep
+export function intervalRepLength(iv) {
+  if (iv.duration_s) return iv.duration_s % 60 === 0 ? `${iv.duration_s / 60} min` : `${iv.duration_s} s`
+  return `${iv.distance_m} m`
+}
 
 // Parses one plan file. Returns { sessions, errors, warnings }; invalid sessions are dropped.
 export function parsePlanFile(text, fileName) {
@@ -69,7 +75,11 @@ function validateSession(s, where, warnings) {
         if (!INTERVAL_KEYS.includes(key)) warnings.push(`${where}: unknown interval field "${key}"`)
       }
       if (!(Number(iv.reps) > 0)) errors.push(`${where}: intervals need "reps"`)
-      if (!(Number(iv.distance_m) > 0)) errors.push(`${where}: intervals need "distance_m"`)
+      const hasDistance = iv.distance_m !== undefined
+      const hasDuration = iv.duration_s !== undefined
+      if (hasDistance === hasDuration) errors.push(`${where}: intervals need exactly one of "distance_m" or "duration_s"`)
+      if (hasDistance && !(Number(iv.distance_m) > 0)) errors.push(`${where}: interval "distance_m" must be a positive number`)
+      if (hasDuration && !(Number(iv.duration_s) > 0)) errors.push(`${where}: interval "duration_s" must be a positive number`)
       if (iv.pace !== undefined && !PACE_RE.test(String(iv.pace))) errors.push(`${where}: interval "pace" must look like "4:10"`)
     }
   }
@@ -99,11 +109,9 @@ function normalizeSession(s) {
     session.kind = s.kind || 'easy'
     if (s.distance_km !== undefined) session.distance_km = Number(s.distance_km)
     if (s.intervals) {
-      session.intervals = {
-        ...s.intervals,
-        reps: Number(s.intervals.reps),
-        distance_m: Number(s.intervals.distance_m)
-      }
+      session.intervals = { ...s.intervals, reps: Number(s.intervals.reps) }
+      if (s.intervals.distance_m !== undefined) session.intervals.distance_m = Number(s.intervals.distance_m)
+      if (s.intervals.duration_s !== undefined) session.intervals.duration_s = Number(s.intervals.duration_s)
     }
   }
   if (s.type === 'strength') {

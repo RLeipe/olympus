@@ -1,4 +1,4 @@
-import { formatPace } from '../../utils/planCore'
+import { formatPace, intervalRepLength } from '../../utils/planCore'
 
 export const STATUS_STYLES = {
   done: { label: 'Done', icon: '✓', dot: 'bg-emerald-500', text: 'text-emerald-700', card: 'bg-emerald-50 border-emerald-200' },
@@ -52,7 +52,7 @@ export function runTarget(session) {
   if (session.pace) parts.push(`${session.pace}/km`)
   if (session.intervals) {
     const iv = session.intervals
-    let text = `${iv.reps} × ${iv.distance_m} m`
+    let text = `${iv.reps} × ${intervalRepLength(iv)}`
     if (iv.pace) text += ` @ ${iv.pace}`
     if (iv.recovery) text += `, ${iv.recovery}`
     parts.push(text)
