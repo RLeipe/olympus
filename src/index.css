@@ -2,11 +2,143 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Design tokens as RGB triplets, used through tailwind.config.js.
+   Slate & Brass: dark blue-grey slate, muted brass, warm ivory. Contrast is kept
+   deliberately soft; brass is used sparingly. */
+@layer base {
+  :root {
+    color-scheme: dark;
+    --bg: 18 22 29;
+    --surface: 24 29 38;
+    --sunken: 31 37 48;
+    --line: 44 51 64;
+    --ink: 207 201 188;
+    --ink-soft: 151 154 159;
+    --ink-faint: 102 107 116;
+    /* Brass: the accent, also used for "done" */
+    --accent: 163 140 94;
+    --accent-ink: 20 18 13;
+    --accent-strong: 179 155 108;
+    --partial: 169 115 90;
+    --missed: 156 92 94;
+    --extra: 125 143 166;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    margin: 0;
+  }
+
+  /* Stepper inputs show their own buttons */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface rounded-2xl border border-line;
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-faint;
+  }
+
+  /* Big numbers: classical serif with lining, even-width figures */
+  .num {
+    @apply font-display font-semibold;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Titles in Roman capitals */
+  .title {
+    @apply font-title font-medium uppercase tracking-[0.08em] leading-none;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition
+      active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40;
+  }
+
+  /* Brass outline with a faint tint rather than a solid block of color */
+  .btn-primary {
+    @apply btn h-12 px-5 bg-accent/15 text-accent-strong ring-1 ring-inset ring-accent/55 hover:bg-accent/25;
+  }
+
+  .btn-secondary {
+    @apply btn h-10 px-4 text-sm bg-sunken text-ink hover:bg-line;
+  }
+
+  .btn-ghost {
+    @apply btn h-9 px-3 text-sm text-ink-soft hover:text-ink hover:bg-sunken;
+  }
+
+  .icon-btn {
+    @apply btn h-10 w-10 bg-sunken text-ink-soft hover:text-ink hover:bg-line;
+  }
+
+  .input {
+    @apply w-full h-12 rounded-xl bg-sunken border border-transparent px-4 text-base text-ink
+      placeholder:text-ink-faint transition
+      focus:outline-none focus:border-ink/25 focus:bg-surface;
+  }
+
+  .label {
+    @apply block text-xs font-semibold text-ink-soft mb-1.5;
+  }
+
+  /* Small engraved-looking label: capitals in a thin outline of the text color */
+  .chip {
+    @apply inline-flex items-center h-[19px] px-1.5 rounded-sm border border-current text-[9.5px] font-semibold
+      uppercase tracking-[0.1em] whitespace-nowrap;
+  }
+}
+
+/* react-datepicker, restyled to the tokens above */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker {
+  @apply font-sans border border-line rounded-2xl bg-surface text-ink shadow-pop overflow-hidden !important;
+}
+.react-datepicker__header {
+  @apply bg-surface border-b border-line pt-3 !important;
+}
+.react-datepicker__current-month {
+  @apply text-ink font-bold text-sm !important;
+}
+.react-datepicker__day-name {
+  @apply text-ink-faint text-xs font-semibold !important;
+}
+.react-datepicker__day {
+  @apply text-ink rounded-lg !important;
+}
+.react-datepicker__day:hover {
+  @apply bg-sunken !important;
+}
+.react-datepicker__day--outside-month {
+  @apply text-ink-faint !important;
+}
+.react-datepicker__day--today {
+  @apply font-extrabold !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-accent/25 text-ink font-bold !important;
+}
+.react-datepicker__navigation-icon::before {
+  @apply border-ink-faint !important;
+}
+.react-datepicker__triangle {
+  display: none;
 }
