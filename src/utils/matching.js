@@ -12,7 +12,7 @@ const MATCH_OFFSETS = [0, -1, 1]
 const DISTANCE_TOLERANCE = 0.9
 const LAP_DISTANCE_TOLERANCE = 0.15
 const LAP_DURATION_TOLERANCE = 0.15
-const LAP_PACE_SLACK_S = 10
+const LAP_PACE_SLACK_S = 15
 
 // workoutSets: rows with exercises(name, metric_type); activities: rows from the activities table
 export function buildActuals(workoutSets, activities) {
