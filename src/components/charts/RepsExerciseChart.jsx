@@ -34,7 +34,7 @@ export default function RepsExerciseChart({ data }) {
           <YAxis yAxisId="right" orientation="right" hide />
           <Tooltip content={<RepsTooltip />} cursor={cursorProps} />
           <Bar yAxisId="right" dataKey="totalReps" fill={COLORS.bar} radius={[4, 4, 0, 0]} maxBarSize={18} />
-          <Line yAxisId="left" type="linear" dataKey="maxReps" stroke={COLORS.primary} strokeWidth={2.5} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} />
+          <Line yAxisId="left" type="linear" dataKey="maxReps" stroke={COLORS.primary} strokeWidth={2} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
-// Colors are CSS variables (RGB triplets, see src/index.css) so light and dark mode
-// share one set of class names and opacity modifiers like bg-accent/15 keep working.
+// Colors are CSS variables (RGB triplets, see src/index.css), so opacity modifiers
+// like bg-accent/15 work and the palette is defined in one place.
 const token = name => `rgb(var(--${name}) / <alpha-value>)`
 
 export default {
@@ -32,12 +32,23 @@ export default {
         strava: '#fc4c02',
       },
       fontFamily: {
-        sans: ['Manrope', 'system-ui', 'sans-serif'],
-        display: ['"Barlow Condensed"', 'Manrope', 'system-ui', 'sans-serif'],
+        // Humanist sans for reading, a classical serif for numbers, Roman capitals for titles
+        sans: ['"Alegreya Sans"', 'Georgia', 'serif'],
+        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        title: ['Cinzel', 'Georgia', 'serif'],
+      },
+      // Corners stay small throughout; the classical look avoids soft, pill-shaped UI
+      borderRadius: {
+        sm: '2px',
+        DEFAULT: '3px',
+        md: '3px',
+        lg: '3px',
+        xl: '4px',
+        '2xl': '4px',
+        '3xl': '6px',
       },
       boxShadow: {
-        card: '0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px -8px rgb(0 0 0 / 0.08)',
-        pop: '0 12px 40px -12px rgb(0 0 0 / 0.35)',
+        pop: '0 16px 40px -12px rgb(0 0 0 / 0.6)',
       },
     },
   },

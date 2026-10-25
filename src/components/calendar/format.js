@@ -1,14 +1,15 @@
 import { formatPace } from '../../utils/planCore'
 
-// Lime means done. tile: session box with a colored left edge, chip: status pill, marker: month-grid square
+// Brass means done. tile: session box with a colored left edge, chip: outlined status label (text color),
+// marker: month-grid square
 export const STATUS_STYLES = {
-  done: { label: 'Done', chip: 'bg-accent text-accent-ink', marker: 'bg-accent text-accent-ink', tile: 'bg-sunken shadow-[inset_3px_0_0_rgb(var(--accent-strong))]' },
-  partial: { label: 'Partial', chip: 'bg-partial/15 text-partial', marker: 'bg-partial text-surface', tile: 'bg-sunken shadow-[inset_3px_0_0_rgb(var(--partial))]' },
-  missed: { label: 'Missed', chip: 'bg-missed/15 text-missed', marker: 'bg-missed text-surface', tile: 'bg-sunken shadow-[inset_3px_0_0_rgb(var(--missed))]' },
-  today: { label: 'Today', chip: 'bg-ink text-bg', marker: 'border border-dashed border-ink text-ink', tile: 'border border-dashed border-ink/40' },
-  planned: { label: 'Planned', chip: 'border border-dashed border-ink-faint/60 text-ink-faint', marker: 'border border-dashed border-ink-faint/70 text-ink-faint', tile: 'border border-dashed border-line' },
+  done: { label: 'Done', chip: 'text-accent-strong', marker: 'bg-accent text-accent-ink', tile: 'bg-sunken shadow-[inset_2px_0_0_rgb(var(--accent-strong))]' },
+  partial: { label: 'Partial', chip: 'text-partial', marker: 'bg-partial text-surface', tile: 'bg-sunken shadow-[inset_2px_0_0_rgb(var(--partial))]' },
+  missed: { label: 'Missed', chip: 'text-missed', marker: 'bg-missed text-surface', tile: 'bg-sunken shadow-[inset_2px_0_0_rgb(var(--missed))]' },
+  today: { label: 'Today', chip: 'text-ink', marker: 'border border-dashed border-ink-soft text-ink', tile: 'border border-dashed border-ink-faint/60' },
+  planned: { label: 'Planned', chip: 'text-ink-faint border-dashed', marker: 'border border-dashed border-ink-faint/70 text-ink-faint', tile: 'border border-dashed border-line' },
   rest: { label: 'Rest', chip: 'text-ink-faint', marker: 'text-ink-faint', tile: 'bg-sunken/50' },
-  extra: { label: 'Unplanned', chip: 'bg-extra/15 text-extra', marker: 'bg-extra text-surface', tile: 'bg-sunken shadow-[inset_3px_0_0_rgb(var(--extra))]' }
+  extra: { label: 'Unplanned', chip: 'text-extra', marker: 'bg-extra text-surface', tile: 'bg-sunken shadow-[inset_2px_0_0_rgb(var(--extra))]' }
 }
 
 export const TYPE_LETTER = { run: 'R', strength: 'S', other: 'O', rest: '–' }

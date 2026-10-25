@@ -56,7 +56,7 @@ not change anything by itself; it is read at the next planning session.
 | **Weight** (`/bodyweight`) | Log body weight |
 | **Log** (`/log`) | Log sets (sets × reps × kg, or duration), add exercises, write the session note, delete recent entries |
 
-The user switcher in the header defaults to Roman. On phones the pages are in a bottom tab bar. The app follows the system light/dark setting.
+The user switcher in the header defaults to Roman. On phones the pages are in a bottom tab bar. The design ("Slate & Brass") is dark only: slate greys, muted brass, Roman-capital titles and serif numbers.
 
 ## Architecture
 
@@ -92,7 +92,7 @@ Schema changes go in `supabase/migrations/` and are run by hand in the Supabase 
 ### Code map
 
 - `src/pages/`: Dashboard (Stats), Calendar, QuickLog (Log), BodyWeight
-- `src/index.css`, `tailwind.config.js`: design tokens (colors for light and dark mode, fonts)
+- `src/index.css`, `tailwind.config.js`: design tokens (colors, fonts, corner radii)
 - `src/components/ui.jsx`, `icons.jsx`: shared UI pieces (stepper, sheet, segmented control, ...) and icons
 - `src/components/charts/`: exercise and body weight charts with a shared theme
 - `src/components/calendar/`: day cards, month grid, consistency strip, Strava bar

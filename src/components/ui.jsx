@@ -6,7 +6,7 @@ export function PageHeader({ eyebrow, title, children }) {
     <div className="flex items-end justify-between gap-3 mb-5 md:mb-7">
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
-        <h1 className="font-display font-semibold text-4xl md:text-5xl leading-none tracking-tight uppercase">{title}</h1>
+        <h1 className="title text-3xl md:text-4xl">{title}</h1>
       </div>
       {children}
     </div>
@@ -45,14 +45,14 @@ export function Banner({ tone = 'warn', onClose, children }) {
 export function Segmented({ value, options, onChange, size = 'md' }) {
   const height = size === 'sm' ? 'h-8 text-xs' : 'h-9 text-sm'
   return (
-    <div className="inline-flex bg-sunken rounded-full p-1 gap-0.5">
+    <div className="inline-flex bg-sunken rounded p-1 gap-0.5">
       {options.map(([optionValue, label]) => (
         <button
           key={optionValue}
           onClick={() => onChange(optionValue)}
           aria-pressed={value === optionValue}
-          className={`${height} px-3.5 rounded-full font-semibold transition
-            ${value === optionValue ? 'bg-surface text-ink shadow-card' : 'text-ink-soft hover:text-ink'}`}
+          className={`${height} px-3.5 rounded-sm font-semibold transition
+            ${value === optionValue ? 'bg-line text-ink' : 'text-ink-soft hover:text-ink'}`}
         >
           {label}
         </button>
@@ -77,7 +77,7 @@ export function Stepper({ label, hint, value, onChange, step = 1, min = 0, start
         {hint && <div className="text-xs text-ink-faint">{hint}</div>}
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
-        <button type="button" onClick={() => bump(-1)} className="icon-btn h-11 w-11 rounded-full" aria-label={`Less ${label}`}>
+        <button type="button" onClick={() => bump(-1)} className="icon-btn h-11 w-11" aria-label={`Less ${label}`}>
           <MinusIcon />
         </button>
         <div className="relative w-[5.5rem]">
@@ -99,7 +99,7 @@ export function Stepper({ label, hint, value, onChange, step = 1, min = 0, start
             </span>
           )}
         </div>
-        <button type="button" onClick={() => bump(1)} className="icon-btn h-11 w-11 rounded-full" aria-label={`More ${label}`}>
+        <button type="button" onClick={() => bump(1)} className="icon-btn h-11 w-11" aria-label={`More ${label}`}>
           <PlusIcon />
         </button>
       </div>
@@ -132,7 +132,7 @@ export function Sheet({ title, onClose, children }) {
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line md:hidden" />
         <div className="flex items-center justify-between gap-3 mb-4">
           <h2 className="text-lg font-bold min-w-0">{title}</h2>
-          <button onClick={onClose} className="icon-btn h-9 w-9 rounded-full shrink-0" aria-label="Close">
+          <button onClick={onClose} className="icon-btn h-9 w-9 shrink-0" aria-label="Close">
             <XIcon className="w-4 h-4" />
           </button>
         </div>

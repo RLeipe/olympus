@@ -34,7 +34,7 @@ export default function TimeBasedExerciseChart({ data }) {
           <YAxis yAxisId="right" orientation="right" hide />
           <Tooltip content={<TimeTooltip />} cursor={cursorProps} />
           <Bar yAxisId="right" dataKey="totalDuration" fill={COLORS.bar} radius={[4, 4, 0, 0]} maxBarSize={18} />
-          <Line yAxisId="left" type="linear" dataKey="maxDuration" stroke={COLORS.primary} strokeWidth={2.5} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} />
+          <Line yAxisId="left" type="linear" dataKey="maxDuration" stroke={COLORS.primary} strokeWidth={2} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

@@ -2,43 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens as RGB triplets, used through tailwind.config.js */
+/* Design tokens as RGB triplets, used through tailwind.config.js.
+   Slate & Brass: dark blue-grey slate, muted brass, warm ivory. Contrast is kept
+   deliberately soft; brass is used sparingly. */
 @layer base {
   :root {
-    color-scheme: light;
-    --bg: 244 243 239;
-    --surface: 255 255 255;
-    --sunken: 239 238 233;
-    --line: 226 224 217;
-    --ink: 22 23 26;
-    --ink-soft: 88 91 98;
-    --ink-faint: 138 141 147;
-    /* Lime: the brand color, also used for "done" */
-    --accent: 200 242 60;
-    --accent-ink: 22 23 26;
-    --accent-strong: 77 124 15;
-    --partial: 217 119 6;
-    --missed: 225 29 72;
-    --extra: 2 132 199;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      color-scheme: dark;
-      --bg: 11 12 14;
-      --surface: 21 23 26;
-      --sunken: 30 33 37;
-      --line: 40 43 48;
-      --ink: 242 242 239;
-      --ink-soft: 166 169 175;
-      --ink-faint: 112 116 123;
-      --accent: 200 242 60;
-      --accent-ink: 17 19 12;
-      --accent-strong: 200 242 60;
-      --partial: 251 191 36;
-      --missed: 251 113 133;
-      --extra: 56 189 248;
-    }
+    color-scheme: dark;
+    --bg: 18 22 29;
+    --surface: 24 29 38;
+    --sunken: 31 37 48;
+    --line: 44 51 64;
+    --ink: 207 201 188;
+    --ink-soft: 151 154 159;
+    --ink-faint: 102 107 116;
+    /* Brass: the accent, also used for "done" */
+    --accent: 163 140 94;
+    --accent-ink: 20 18 13;
+    --accent-strong: 179 155 108;
+    --partial: 169 115 90;
+    --missed: 156 92 94;
+    --extra: 125 143 166;
   }
 
   html {
@@ -63,15 +46,22 @@
 
 @layer components {
   .card {
-    @apply bg-surface rounded-2xl border border-line shadow-card;
+    @apply bg-surface rounded-2xl border border-line;
   }
 
   .eyebrow {
-    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-ink-faint;
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-faint;
   }
 
+  /* Big numbers: classical serif with lining, even-width figures */
   .num {
-    @apply font-display tabular-nums;
+    @apply font-display font-semibold;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Titles in Roman capitals */
+  .title {
+    @apply font-title font-medium uppercase tracking-[0.08em] leading-none;
   }
 
   .btn {
@@ -80,8 +70,9 @@
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40;
   }
 
+  /* Brass outline with a faint tint rather than a solid block of color */
   .btn-primary {
-    @apply btn h-12 px-5 bg-accent text-accent-ink hover:brightness-95;
+    @apply btn h-12 px-5 bg-accent/15 text-accent-strong ring-1 ring-inset ring-accent/55 hover:bg-accent/25;
   }
 
   .btn-secondary {
@@ -106,8 +97,10 @@
     @apply block text-xs font-semibold text-ink-soft mb-1.5;
   }
 
+  /* Small engraved-looking label: capitals in a thin outline of the text color */
   .chip {
-    @apply inline-flex items-center gap-1 h-6 px-2 rounded-full text-[11px] font-bold whitespace-nowrap;
+    @apply inline-flex items-center h-[19px] px-1.5 rounded-sm border border-current text-[9.5px] font-semibold
+      uppercase tracking-[0.1em] whitespace-nowrap;
   }
 }
 
@@ -141,7 +134,7 @@
 }
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
-  @apply bg-accent text-accent-ink font-bold !important;
+  @apply bg-accent/25 text-ink font-bold !important;
 }
 .react-datepicker__navigation-icon::before {
   @apply border-ink-faint !important;

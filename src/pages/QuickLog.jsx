@@ -213,8 +213,8 @@ export default function QuickLog() {
                 key={id}
                 type="button"
                 onClick={() => setSelectedExercise(id)}
-                className={`h-8 px-3 rounded-full text-xs font-bold whitespace-nowrap transition
-                  ${selectedExercise === id ? 'bg-ink text-bg' : 'bg-sunken text-ink-soft hover:text-ink'}`}
+                className={`h-8 px-3 rounded text-xs font-bold whitespace-nowrap transition
+                  ${selectedExercise === id ? 'bg-line text-ink' : 'bg-sunken text-ink-soft hover:text-ink'}`}
               >
                 {name}
               </button>
@@ -260,8 +260,8 @@ export default function QuickLog() {
                   key={label}
                   type="button"
                   onClick={() => setWorkoutDate(date)}
-                  className={`h-7 px-2.5 rounded-full text-xs font-bold transition
-                    ${selectedIso === toISODate(date) ? 'bg-ink text-bg' : 'text-ink-soft hover:bg-sunken'}`}
+                  className={`h-7 px-2.5 rounded text-xs font-bold transition
+                    ${selectedIso === toISODate(date) ? 'bg-line text-ink' : 'text-ink-soft hover:bg-sunken'}`}
                 >
                   {label}
                 </button>
@@ -392,9 +392,9 @@ function NewExerciseModal({ onClose, onSuccess }) {
                 onClick={() => setMetricType(type.value)}
                 aria-pressed={metricType === type.value}
                 className={`w-full text-left rounded-xl px-4 py-3 border transition flex items-center gap-3
-                  ${metricType === type.value ? 'border-ink bg-sunken' : 'border-line hover:bg-sunken/60'}`}
+                  ${metricType === type.value ? 'border-accent/60 bg-sunken' : 'border-line hover:bg-sunken/60'}`}
               >
-                <span className={`w-4 h-4 rounded-full border-2 shrink-0 ${metricType === type.value ? 'border-ink bg-ink shadow-[inset_0_0_0_2px_rgb(var(--sunken))]' : 'border-line'}`} />
+                <span className={`w-4 h-4 rounded-full border-2 shrink-0 ${metricType === type.value ? 'border-accent-strong bg-accent-strong shadow-[inset_0_0_0_2px_rgb(var(--sunken))]' : 'border-line'}`} />
                 <span>
                   <span className="block text-sm font-bold">{type.title}</span>
                   <span className="block text-xs text-ink-faint">{type.description}</span>

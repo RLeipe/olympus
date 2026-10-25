@@ -10,7 +10,7 @@ export const COLORS = {
   surface: 'rgb(var(--surface))'
 }
 
-const tick = { fontSize: 11, fill: COLORS.axis, fontWeight: 600 }
+const tick = { fontSize: 11, fill: COLORS.axis, fontWeight: 500 }
 
 // Time axis over the `t` timestamps added by withTime()
 export const xAxisProps = {

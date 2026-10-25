@@ -29,7 +29,7 @@ export default function WeekStrip({ weeks, hasPlan }) {
           const total = planned ? week.planned : week.extras
           const done = planned ? week.done : week.extras
           const ratio = planned ? week.done / week.planned : null
-          const color = ratio === null || ratio >= 0.8 ? 'bg-accent-strong' : ratio >= 0.5 ? 'bg-partial' : 'bg-missed'
+          const color = ratio === null || ratio >= 0.8 ? 'bg-accent' : ratio >= 0.5 ? 'bg-partial' : 'bg-missed'
           const label = parseISODate(week.start).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
           const isCurrent = index === weeks.length - 1
           return (

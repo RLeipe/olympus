@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { parseISODate } from '../../utils/dates'
 import DayNoteEditor from '../DayNoteEditor'
-import { CheckIcon, CircleIcon, DumbbellIcon, HalfCircleIcon, MoonIcon, NoteIcon, PlusIcon, PulseIcon, RunIcon, XIcon } from '../icons'
+import { DumbbellIcon, MoonIcon, NoteIcon, PulseIcon, RunIcon } from '../icons'
 import {
   STATUS_STYLES,
   sessionTitle,
@@ -14,7 +14,6 @@ import {
 } from './format'
 
 const TYPE_ICON = { run: RunIcon, strength: DumbbellIcon, other: PulseIcon, rest: MoonIcon }
-const STATUS_ICON = { done: CheckIcon, partial: HalfCircleIcon, missed: XIcon, today: CircleIcon, planned: CircleIcon, rest: MoonIcon, extra: PlusIcon }
 
 // Everything for one day: planned sessions with their outcome, unplanned activities and the day note
 export default function DayCard({ date, day, note, isToday, userId, onNoteSaved, bare = false }) {
@@ -26,7 +25,7 @@ export default function DayCard({ date, day, note, isToday, userId, onNoteSaved,
   const compact = isEmpty && !note && !editing && !bare
 
   return (
-    <div className={bare ? '' : `card ${compact ? 'px-4 py-3' : 'p-3.5 md:p-4'} ${isToday ? 'ring-2 ring-ink/80 border-transparent' : ''}`}>
+    <div className={bare ? '' : `card ${compact ? 'px-4 py-3' : 'p-3.5 md:p-4'} ${isToday ? 'ring-1 ring-accent/70 border-transparent' : ''}`}>
       <div className={`flex items-center justify-between gap-2 ${compact ? '' : 'mb-3'}`}>
         <div className="flex items-baseline gap-2 whitespace-nowrap min-w-0">
           {!bare && (
@@ -37,14 +36,14 @@ export default function DayCard({ date, day, note, isToday, userId, onNoteSaved,
               </span>
             </>
           )}
-          {isToday && <span className="chip bg-accent text-accent-ink">Today</span>}
+          {isToday && <span className="chip text-accent-strong">Today</span>}
         </div>
         <div className="flex items-center gap-2">
           {compact && <span className="text-xs text-ink-faint whitespace-nowrap">Nothing planned</span>}
           {!note && !editing && (
             <button
               onClick={() => setEditing(true)}
-              className="h-7 rounded-full flex items-center justify-center gap-1.5 px-1.5 text-xs font-semibold text-ink-faint hover:text-ink hover:bg-sunken"
+              className="h-7 rounded flex items-center justify-center gap-1.5 px-1.5 text-xs font-semibold text-ink-faint hover:text-ink hover:bg-sunken"
               aria-label="Add note"
               title="Add note"
             >
@@ -95,8 +94,7 @@ function StatusChip({ status, movedTo }) {
   const style = STATUS_STYLES[status]
   let label = style.label
   if (movedTo) label += ` ${parseISODate(movedTo).toLocaleDateString('en-GB', { weekday: 'short' })}`
-  const Icon = STATUS_ICON[status]
-  return <span className={`chip ${style.chip}`}><Icon className="w-3 h-3" strokeWidth={3} />{label}</span>
+  return <span className={`chip ${style.chip}`}>{label}</span>
 }
 
 function SessionTitle({ type, title }) {

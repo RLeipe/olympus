@@ -44,4 +44,5 @@ Calendar. You are the only one who edits the plan. Plans exist only for Roman so
 - The app must work well on a phone; check mobile layouts.
 - Use the design tokens (`bg-surface`, `text-ink-soft`, `bg-accent`, ... defined in `src/index.css`
   and `tailwind.config.js`) and the shared pieces in `src/components/ui.jsx`, not raw Tailwind
-  colors, so light and dark mode keep working.
+  colors. The look is "Slate & Brass": dark only, deliberately soft contrast, small corners,
+  brass used sparingly, Cinzel for titles (`.title`) and Cormorant Garamond for numbers (`.num`).

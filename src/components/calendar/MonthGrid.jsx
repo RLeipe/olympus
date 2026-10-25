@@ -38,7 +38,7 @@ export default function MonthGrid({ monthStart, days, notes, todayIso, onSelect 
             >
               <div className="flex items-center justify-between">
                 <span className={`num text-sm md:text-base font-semibold leading-none
-                  ${isToday ? 'bg-accent text-accent-ink rounded-full w-6 h-6 -m-0.5 flex items-center justify-center' : 'text-ink-soft'}`}>
+                  ${isToday ? 'bg-accent/25 text-ink rounded-sm w-6 h-6 -m-0.5 flex items-center justify-center' : 'text-ink-soft'}`}>
                   {parseISODate(date).getDate()}
                 </span>
                 {notes[date] && <span className="w-1.5 h-1.5 rounded-full bg-partial" title="Has a note" />}

@@ -213,7 +213,7 @@ export default function BodyWeight() {
                     <div className="num text-xl font-semibold w-16 text-right">{Number(log.weight).toFixed(1)}</div>
                     <button
                       onClick={() => handleDelete(log.id)}
-                      className="h-9 w-9 rounded-full flex items-center justify-center text-ink-faint hover:text-missed hover:bg-missed/10"
+                      className="h-9 w-9 rounded flex items-center justify-center text-ink-faint hover:text-missed hover:bg-missed/10"
                       aria-label="Delete entry"
                     >
                       <TrashIcon className="w-4 h-4" />

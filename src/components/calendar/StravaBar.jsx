@@ -36,7 +36,7 @@ export default function StravaBar({ strava }) {
 
   return (
     <div className="flex items-center gap-2 text-xs">
-      <div className="inline-flex items-center gap-2 h-9 pl-3 pr-1 rounded-full bg-sunken text-ink-soft font-semibold">
+      <div className="inline-flex items-center gap-2 h-9 pl-3 pr-1 rounded bg-sunken text-ink-soft font-semibold">
         <span className={`w-2 h-2 rounded-full bg-strava ${syncing ? 'animate-pulse' : ''}`} />
         <span>
           Strava {syncing ? 'syncing…' : status.lastSyncAt ? timeAgo(status.lastSyncAt) : 'connected'}
@@ -44,7 +44,7 @@ export default function StravaBar({ strava }) {
         <button
           onClick={sync}
           disabled={syncing}
-          className="h-7 w-7 rounded-full flex items-center justify-center hover:bg-surface hover:text-ink disabled:opacity-50"
+          className="h-7 w-7 rounded-sm flex items-center justify-center hover:bg-surface hover:text-ink disabled:opacity-50"
           aria-label="Sync Strava"
           title="Sync now"
         >

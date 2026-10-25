@@ -14,7 +14,7 @@ function UserSwitcher() {
   if (!currentUser) return null
 
   return (
-    <div className="flex items-center bg-sunken rounded-full p-1 gap-0.5" role="group" aria-label="User">
+    <div className="flex items-center bg-sunken rounded p-1 gap-0.5" role="group" aria-label="User">
       {users.map(user => {
         const active = user.id === currentUser.id
         return (
@@ -23,8 +23,8 @@ function UserSwitcher() {
             onClick={() => setCurrentUser(user)}
             aria-pressed={active}
             title={user.name}
-            className={`h-8 min-w-8 rounded-full text-sm font-bold transition px-2.5 md:px-3.5
-              ${active ? 'bg-ink text-bg' : 'text-ink-soft hover:text-ink'}`}
+            className={`h-8 min-w-8 rounded-sm text-sm font-bold transition px-2.5 md:px-3.5
+              ${active ? 'bg-line text-ink' : 'text-ink-soft hover:text-ink'}`}
           >
             <span className="md:hidden">{user.name[0]}</span>
             <span className="hidden md:inline">{user.name}</span>
@@ -42,7 +42,7 @@ export default function Header() {
         <div className="mx-auto max-w-6xl px-4 md:px-6 h-14 md:h-16 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <Logo className="w-8 h-8" />
-            <span className="font-display font-bold text-xl tracking-[0.18em] uppercase">Olympus</span>
+            <span className="title text-lg tracking-[0.16em]">Olympus</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 flex-1 ml-6">
@@ -51,7 +51,7 @@ export default function Header() {
                 key={item.to}
                 to={item.to}
                 end={item.to === '/'}
-                className={({ isActive }) => `h-9 px-3.5 rounded-full text-sm font-semibold flex items-center transition
+                className={({ isActive }) => `h-9 px-3.5 rounded text-sm font-semibold flex items-center transition
                   ${isActive ? 'bg-sunken text-ink' : 'text-ink-soft hover:text-ink'}`}
               >
                 {item.label}
@@ -60,7 +60,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <NavLink to="/log" className="hidden md:inline-flex btn h-10 px-4 text-sm bg-accent text-accent-ink hover:brightness-95">
+            <NavLink to="/log" className="hidden md:inline-flex btn-primary h-10 px-4 text-sm">
               <PlusIcon className="w-4 h-4" strokeWidth={2.5} /> Log
             </NavLink>
             <UserSwitcher />
@@ -82,11 +82,11 @@ export default function Header() {
               {({ isActive }) => (
                 <>
                   {primary ? (
-                    <span className={`w-11 h-8 rounded-full flex items-center justify-center bg-accent text-accent-ink ${isActive ? 'ring-2 ring-ink/80 ring-offset-2 ring-offset-surface' : ''}`}>
+                    <span className={`w-11 h-8 rounded flex items-center justify-center text-accent-strong ring-1 ring-inset ring-accent/55 ${isActive ? 'bg-accent/25' : 'bg-accent/10'}`}>
                       <Icon className="w-5 h-5" strokeWidth={2.5} />
                     </span>
                   ) : (
-                    <span className={`w-11 h-8 rounded-full flex items-center justify-center transition ${isActive ? 'bg-sunken' : ''}`}>
+                    <span className={`w-11 h-8 rounded flex items-center justify-center transition ${isActive ? 'bg-sunken' : ''}`}>
                       <Icon className="w-5 h-5" />
                     </span>
                   )}

@@ -215,7 +215,7 @@ function Delta({ value, format, unit }) {
   const up = value > 0
   const Arrow = up ? ArrowUpIcon : ArrowDownIcon
   return (
-    <span className={`chip ${up ? 'bg-accent/20 text-accent-strong' : 'bg-sunken text-ink-soft'}`}>
+    <span className={`chip gap-0.5 ${up ? 'text-accent-strong' : 'text-ink-soft'}`}>
       <Arrow className="w-3 h-3" strokeWidth={3} />
       {format(Math.abs(Math.round(value * 10) / 10))}{unit && ` ${unit}`}
     </span>
@@ -239,7 +239,7 @@ function BodyWeightCard({ all, inRange }) {
         </div>
         {change !== null && (
           <div className="text-right">
-            <span className="chip bg-sunken text-ink-soft">
+            <span className="chip text-ink-soft">
               {change > 0 ? '+' : change < 0 ? '−' : '±'}{Math.abs(change).toFixed(1)} kg
             </span>
             <div className="text-[11px] text-ink-faint mt-1">in this range</div>
@@ -320,7 +320,7 @@ function ExerciseCard({ exercise, data, rangeData, expanded, onToggle, todayIso 
           </div>
           <div className="flex flex-col items-end gap-1 shrink-0">
             {isBest ? (
-              <span className="chip bg-accent text-accent-ink">Best</span>
+              <span className="chip text-accent-strong">Best</span>
             ) : (
               summary.best != null && <span className="text-[11px] font-semibold text-ink-faint">Best {metric.format(summary.best)}{metric.unit && ` ${metric.unit}`}</span>
             )}

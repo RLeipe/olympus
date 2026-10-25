@@ -45,7 +45,7 @@ export default function DayNoteEditor({ userId, date, initialNote = '', onSaved,
           type="button"
           onClick={handleSave}
           disabled={saving || unchanged}
-          className="btn h-9 px-4 text-sm bg-ink text-bg hover:opacity-90"
+          className="btn-primary h-9 px-4 text-sm"
         >
           {saving ? 'Saving...' : 'Save note'}
         </button>

@@ -36,7 +36,7 @@ export default function BodyWeightChart({ data, height = 220 }) {
           type="linear"
           dataKey="weight"
           stroke={COLORS.primary}
-          strokeWidth={2.5}
+          strokeWidth={2}
           fill={`url(#${gradientId})`}
           dot={chartData.length <= 40 ? lineDot(COLORS.primary) : false}
           activeDot={activeDot(COLORS.primary)}

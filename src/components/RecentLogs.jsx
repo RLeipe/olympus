@@ -79,7 +79,7 @@ export default function RecentLogs({ workoutSets, onDelete }) {
                   <button
                     onClick={() => handleDelete(set.id)}
                     disabled={deleting === set.id}
-                    className="h-9 w-9 rounded-full flex items-center justify-center text-ink-faint hover:text-missed hover:bg-missed/10 disabled:opacity-40"
+                    className="h-9 w-9 rounded flex items-center justify-center text-ink-faint hover:text-missed hover:bg-missed/10 disabled:opacity-40"
                     aria-label="Delete set"
                   >
                     <TrashIcon className="w-4 h-4" />

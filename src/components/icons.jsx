@@ -104,11 +104,11 @@ export const ArrowDownIcon = props => (
   <Icon {...props}><path d="M12 5v14M6 13l6 6 6-6" /></Icon>
 )
 
-// The Olympus mark: two peaks on a dark tile, in both color schemes
+// The Olympus mark: two brass peaks on a slate tile
 export function Logo({ className = 'w-8 h-8' }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <rect x="0.5" y="0.5" width="31" height="31" rx="8.5" fill="#16171a" stroke="rgb(var(--line))" />
+      <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" className="fill-surface stroke-line" />
       <path d="M4 25 13 9l4.5 8 3-5L28 25Z" className="fill-accent" />
     </svg>
   )

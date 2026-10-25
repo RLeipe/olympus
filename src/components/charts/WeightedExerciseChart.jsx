@@ -37,7 +37,7 @@ export default function WeightedExerciseChart({ data }) {
           <Tooltip content={<WeightedTooltip />} cursor={cursorProps} />
           <Bar yAxisId="right" dataKey="volume" fill={COLORS.bar} radius={[4, 4, 0, 0]} maxBarSize={18} />
           <Line yAxisId="left" type="linear" dataKey="rm1" stroke={COLORS.secondary} strokeWidth={2} dot={lineDot(COLORS.secondary)} activeDot={activeDot(COLORS.secondary)} connectNulls />
-          <Line yAxisId="left" type="linear" dataKey="rm5" stroke={COLORS.primary} strokeWidth={2.5} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} connectNulls />
+          <Line yAxisId="left" type="linear" dataKey="rm5" stroke={COLORS.primary} strokeWidth={2} dot={lineDot(COLORS.primary)} activeDot={activeDot(COLORS.primary)} connectNulls />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

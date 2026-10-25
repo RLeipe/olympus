@@ -122,14 +122,14 @@ export default function Calendar() {
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
           <div className="eyebrow mb-1">{currentUser.name} · {view === 'weeks' ? 'Two weeks' : 'Month'}</div>
-          <h1 className="font-display font-semibold text-3xl md:text-5xl leading-none tracking-tight uppercase truncate">
+          <h1 className="title text-[1.35rem] md:text-4xl tracking-[0.04em] md:tracking-[0.08em] truncate">
             {rangeTitle(view, anchor, range)}
           </h1>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <button onClick={() => move(-1)} className="icon-btn rounded-full" aria-label="Previous"><ChevronLeftIcon /></button>
-          <button onClick={() => setAnchor(todayIso)} className="btn-secondary rounded-full px-3.5">Today</button>
-          <button onClick={() => move(1)} className="icon-btn rounded-full" aria-label="Next"><ChevronRightIcon /></button>
+          <button onClick={() => move(-1)} className="icon-btn" aria-label="Previous"><ChevronLeftIcon /></button>
+          <button onClick={() => setAnchor(todayIso)} className="btn-secondary px-3.5">Today</button>
+          <button onClick={() => move(1)} className="icon-btn" aria-label="Next"><ChevronRightIcon /></button>
         </div>
       </div>
 
@@ -204,7 +204,7 @@ function TwoWeeks({ range, days, weeks, notes, todayIso, userId, onNoteSaved }) 
               {summary?.planned > 0 && (
                 <div className="flex items-center gap-2">
                   <div className="w-16 h-1.5 rounded-full bg-sunken overflow-hidden">
-                    <div className="h-full bg-accent-strong rounded-full" style={{ width: `${Math.min(1, summary.done / summary.planned) * 100}%` }} />
+                    <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(1, summary.done / summary.planned) * 100}%` }} />
                   </div>
                   <span className="text-xs font-semibold text-ink-soft tabular-nums">{summary.done}/{summary.planned}</span>
                 </div>

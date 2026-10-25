@@ -23,9 +23,9 @@ export function ToastProvider({ children }) {
           <div
             key={toast.key}
             role="status"
-            className="pointer-events-auto flex items-center gap-2.5 bg-ink text-bg rounded-full pl-2 pr-4 py-2 shadow-pop text-sm font-semibold max-w-full"
+            className="pointer-events-auto flex items-center gap-2.5 bg-sunken text-ink ring-1 ring-line rounded pl-2 pr-4 py-2 shadow-pop text-sm font-semibold max-w-full"
           >
-            <span className={`w-6 h-6 shrink-0 rounded-full flex items-center justify-center ${toast.tone === 'error' ? 'bg-missed text-white' : 'bg-accent text-accent-ink'}`}>
+            <span className={`w-6 h-6 shrink-0 rounded-sm flex items-center justify-center ${toast.tone === 'error' ? 'bg-missed/20 text-missed' : 'bg-accent/20 text-accent-strong'}`}>
               {toast.tone === 'error' ? <XIcon className="w-3.5 h-3.5" strokeWidth={3} /> : <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
             </span>
             <span className="truncate">{toast.message}</span>
