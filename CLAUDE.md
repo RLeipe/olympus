@@ -9,7 +9,7 @@ lives in `server/api.js` (exposed via `functions/api/[[path]].js`).
 When Roman asks to plan or adjust training:
 
 1. Read `plan/README.md` (file format) and `plan/<user>/context.md` (goals, constraints, principles).
-2. Get recent training data if `SUPABASE_ACCESS_TOKEN` and `SUPABASE_PROJECT_REF` are set:
+2. Get recent training data if `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set:
    `npm run snapshot -- Roman 6` (plan vs. actual per day, day notes, monthly trends).
    Day notes often contain pain or fatigue remarks; take them into account.
 3. Edit the month files in `plan/<user>/YYYY-MM.yaml`. Use exact kg in 2.5 kg steps and

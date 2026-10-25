@@ -1,68 +1,80 @@
 // Prints a markdown summary of recent training (plan vs. actual, notes, long-term trends)
 // for planning sessions with Claude.
 //
-//   SUPABASE_ACCESS_TOKEN=... SUPABASE_PROJECT_REF=... npm run snapshot -- [user] [weeks]
+//   npm run snapshot -- [user] [weeks]        (defaults: Roman, 6 weeks)
 //
-// Uses the Supabase Management API (read-only SQL). Defaults: user "Roman", 6 weeks.
+// Reads through the public REST API with the anon key, the same access the website has.
+// Needs SUPABASE_URL and SUPABASE_ANON_KEY (or the VITE_-prefixed names) in the environment.
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { parsePlanFile, mergePlans, formatPace } from '../src/utils/planCore.js'
-import { buildActuals, matchPlan } from '../src/utils/matching.js'
-import { addDays, startOfWeek, today, parseISODate } from '../src/utils/dates.js'
+import { buildActuals, matchPlan, RUN_SPORTS } from '../src/utils/matching.js'
+import { addDays, addMonths, startOfMonth, startOfWeek, today, parseISODate } from '../src/utils/dates.js'
 
 const [userName = 'Roman', weeksArg = '6'] = process.argv.slice(2)
 const weeks = Number(weeksArg)
-const { SUPABASE_ACCESS_TOKEN: token, SUPABASE_PROJECT_REF: ref } = process.env
-if (!token || !ref) {
-  console.error('Set SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_REF')
+const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+const key = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
+if (!url || !key) {
+  console.error('Set SUPABASE_URL and SUPABASE_ANON_KEY')
   process.exit(1)
 }
 
-async function sql(query) {
-  const res = await fetch(`https://api.supabase.com/v1/projects/${ref}/database/query`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query })
-  })
-  if (!res.ok) throw new Error(`SQL failed (${res.status}): ${await res.text()}`)
-  return res.json()
+const PAGE_SIZE = 1000
+
+// GET from the REST API, following pagination
+async function rest(path) {
+  const rows = []
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const res = await fetch(`${url}/rest/v1/${path}&limit=${PAGE_SIZE}&offset=${offset}`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
+    })
+    if (!res.ok) throw new Error(`GET ${path.split('?')[0]} failed (${res.status}): ${await res.text()}`)
+    const page = await res.json()
+    rows.push(...page)
+    if (page.length < PAGE_SIZE) return rows
+  }
 }
 
-async function sqlOrEmpty(query) {
+// Tables from the latest migration may not exist yet
+async function restOrEmpty(path) {
   try {
-    return await sql(query)
+    return await rest(path)
   } catch (err) {
-    if (/does not exist/.test(err.message)) return []
+    if (/\((404|400)\)/.test(err.message) && /does not exist|Could not find/.test(err.message)) return []
     throw err
   }
 }
 
-const quote = value => `'${String(value).replace(/'/g, "''")}'`
-
 const todayIso = today()
 const from = addDays(startOfWeek(todayIso), -7 * (weeks - 1))
 const planUntil = addDays(startOfWeek(todayIso), 13)
+const strengthSince = addMonths(todayIso, -5)
+const runsSince = addMonths(todayIso, -11)
 
-const [user] = await sql(`select id, name from users where lower(name) = lower(${quote(userName)})`)
+const users = await rest('users?select=id,name')
+const user = users.find(u => u.name.toLowerCase() === userName.toLowerCase())
 if (!user) {
   console.error(`No user named ${userName}`)
   process.exit(1)
 }
-const uid = quote(user.id)
 
-const sets = await sql(`
-  select ws.workout_date::text, ws.reps, ws.weight::float, ws.set_number,
-         json_build_object('name', e.name, 'metric_type', e.metric_type) as exercises
-  from workout_sets ws join exercises e on e.id = ws.exercise_id
-  where ws.user_id = ${uid} and ws.workout_date >= ${quote(addDays(from, -1))}
-  order by ws.workout_date, e.name, ws.set_number`)
-const activities = await sqlOrEmpty(`
-  select strava_id, activity_date::text, sport_type, name, distance_m::float, moving_time_s,
-         elevation_m::float, avg_hr::float, max_hr::float, avg_speed::float, laps
-  from activities where user_id = ${uid} and activity_date >= ${quote(addDays(from, -1))}
-  order by start_time`)
-const notes = await sqlOrEmpty(`
-  select date::text, note from day_notes where user_id = ${uid} and date >= ${quote(from)} order by date`)
+const allSets = await rest(
+  `workout_sets?select=workout_date,reps,weight,set_number,exercises(name,metric_type)` +
+  `&user_id=eq.${user.id}&workout_date=gte.${[strengthSince, addDays(from, -1)].sort()[0]}` +
+  `&order=workout_date,set_number`)
+const allActivities = await restOrEmpty(
+  `activities?select=strava_id,activity_date,sport_type,name,distance_m,moving_time_s,elevation_m,avg_hr,max_hr,avg_speed,laps` +
+  `&user_id=eq.${user.id}&activity_date=gte.${[runsSince, addDays(from, -1)].sort()[0]}&order=start_time`)
+const notes = await restOrEmpty(`day_notes?select=date,note&user_id=eq.${user.id}&date=gte.${from}&order=date`)
+
+const toNumber = v => (v == null ? null : Number(v))
+for (const a of allActivities) {
+  for (const k of ['distance_m', 'elevation_m', 'avg_hr', 'max_hr', 'avg_speed']) a[k] = toNumber(a[k])
+}
+const recentStart = addDays(from, -1)
+const sets = allSets.filter(s => s.workout_date >= recentStart)
+const activities = allActivities.filter(a => a.activity_date >= recentStart)
 
 // Plan files from the repo
 const planDir = new URL(`../plan/${user.name.toLowerCase()}/`, import.meta.url).pathname
@@ -96,26 +108,35 @@ for (let date = from; date <= planUntil; date = addDays(date, 1)) {
 }
 
 out.push('\n## Running per month (last 12 months)\n')
-const runMonths = await sqlOrEmpty(`
-  select to_char(activity_date, 'YYYY-MM') as month, count(*) as runs,
-         round(sum(distance_m)::numeric / 1000, 1) as km, round(max(distance_m)::numeric / 1000, 1) as longest_km,
-         round(avg(avg_hr)::numeric) as avg_hr
-  from activities
-  where user_id = ${uid} and sport_type in ('Run', 'TrailRun', 'VirtualRun')
-    and activity_date >= (current_date - interval '12 months')
-  group by 1 order by 1`)
-out.push(table(['month', 'runs', 'km', 'longest_km', 'avg_hr'], runMonths))
+const runMonths = {}
+for (const a of allActivities.filter(a => RUN_SPORTS.includes(a.sport_type) && a.activity_date >= startOfMonth(runsSince))) {
+  const m = (runMonths[a.activity_date.slice(0, 7)] ||= { runs: 0, km: 0, longest_km: 0, hr: [] })
+  m.runs++
+  m.km += a.distance_m / 1000
+  m.longest_km = Math.max(m.longest_km, a.distance_m / 1000)
+  if (a.avg_hr) m.hr.push(a.avg_hr)
+}
+out.push(table(['month', 'runs', 'km', 'longest_km', 'avg_hr'], Object.entries(runMonths).sort().map(([month, m]) => ({
+  month,
+  runs: m.runs,
+  km: m.km.toFixed(1),
+  longest_km: m.longest_km.toFixed(1),
+  avg_hr: m.hr.length ? Math.round(m.hr.reduce((x, y) => x + y, 0) / m.hr.length) : ''
+}))))
 
 out.push('\n## Strength bests per month (last 6 months)\n')
-const bests = await sql(`
-  select to_char(ws.workout_date, 'YYYY-MM') as month, e.name as exercise, e.metric_type,
-         max(ws.weight)::float as max_kg, max(ws.reps) as max_reps, count(*) as sets
-  from workout_sets ws join exercises e on e.id = ws.exercise_id
-  where ws.user_id = ${uid} and ws.workout_date >= (current_date - interval '6 months')
-  group by 1, 2, 3 order by 2, 1`)
-out.push(table(['exercise', 'month', 'sets', 'max_kg', 'max_reps'], bests.map(b => ({
-  ...b,
-  max_reps: b.metric_type === 'time_based' ? `${b.max_reps}s` : b.max_reps
+const bests = {}
+for (const s of allSets.filter(s => s.workout_date >= startOfMonth(strengthSince))) {
+  const name = s.exercises?.name || 'Unknown'
+  const k = `${name}|${s.workout_date.slice(0, 7)}`
+  const b = (bests[k] ||= { exercise: name, month: s.workout_date.slice(0, 7), sets: 0, max_kg: null, max_reps: 0, timed: s.exercises?.metric_type === 'time_based' })
+  b.sets++
+  if (s.weight != null) b.max_kg = Math.max(b.max_kg ?? 0, Number(s.weight))
+  b.max_reps = Math.max(b.max_reps, s.reps)
+}
+out.push(table(['exercise', 'month', 'sets', 'max_kg', 'max_reps'], Object.keys(bests).sort().map(k => ({
+  ...bests[k],
+  max_reps: bests[k].timed ? `${bests[k].max_reps}s` : bests[k].max_reps
 }))))
 
 console.log(out.join('\n'))
@@ -133,7 +154,7 @@ function describePlan(s) {
 
 function describeActual(a) {
   if (a.source === 'log') {
-    return `strength: ${a.exercises.map(e => `${e.name} ${e.sets.map(s => s.reps).join('/')}${e.sets[0].weight ? `@${e.sets[0].weight}` : ''}`).join(', ')}`
+    return `strength: ${a.exercises.map(e => `${e.name} ${e.sets.map(s => (e.metricType === 'time_based' ? `${s.reps}s` : s.reps)).join('/')}${e.sets[0].weight ? `@${e.sets[0].weight}` : ''}`).join(', ')}`
   }
   const x = a.activity
   const km = x.distance_m / 1000

@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check-plan": "node scripts/check-plan.mjs",
-    "snapshot": "node scripts/training-snapshot.mjs"
+    "snapshot": "NODE_USE_ENV_PROXY=1 node --disable-warning=UNDICI-EHPA scripts/training-snapshot.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",

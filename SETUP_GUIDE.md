@@ -231,9 +231,10 @@ If you want to use your own domain instead of `*.pages.dev`:
 4. **Redeploy**, open the Calendar page as Roman and click **Connect Strava**.
    The first sync imports the last 60 days; laps for runs are fetched 20 per sync.
 
-5. **Optional, for planning sessions with Claude:** add `SUPABASE_ACCESS_TOKEN` and
-   `SUPABASE_PROJECT_REF` (the same values as the GitHub keep-alive secrets) as environment
-   variables in the Claude Code environment, so `npm run snapshot` can read training data.
+5. **Optional, for planning sessions with Claude:** in the Claude Code environment, add
+   `SUPABASE_URL` and `SUPABASE_ANON_KEY` (same values as the `VITE_` ones) as environment
+   variables and allow `<project-ref>.supabase.co` in network access, so `npm run snapshot`
+   can read training data. Takes effect in new sessions.
 
 ---
 
