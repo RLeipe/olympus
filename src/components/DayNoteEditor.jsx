@@ -32,12 +32,12 @@ export default function DayNoteEditor({ userId, date, initialNote = '', onSaved,
         placeholder="How did it go? Pain, sleep, energy, anything worth remembering..."
         rows={3}
         autoFocus={autoFocus}
-        className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="input h-auto py-3 md:text-sm leading-relaxed resize-y"
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-missed">{error}</p>}
       <div className="flex gap-2 justify-end">
         {onCancel && (
-          <button type="button" onClick={onCancel} className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50">
+          <button type="button" onClick={onCancel} className="btn-ghost">
             Cancel
           </button>
         )}
@@ -45,7 +45,7 @@ export default function DayNoteEditor({ userId, date, initialNote = '', onSaved,
           type="button"
           onClick={handleSave}
           disabled={saving || unchanged}
-          className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300"
+          className="btn h-9 px-4 text-sm bg-ink text-bg hover:opacity-90"
         >
           {saving ? 'Saving...' : 'Save note'}
         </button>

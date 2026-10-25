@@ -42,3 +42,6 @@ Calendar. You are the only one who edits the plan. Plans exist only for Roman so
   and the Node scripts; keep them free of Vite-only features.
 - Database changes go in `supabase/migrations/` and are run manually in the Supabase SQL editor.
 - The app must work well on a phone; check mobile layouts.
+- Use the design tokens (`bg-surface`, `text-ink-soft`, `bg-accent`, ... defined in `src/index.css`
+  and `tailwind.config.js`) and the shared pieces in `src/components/ui.jsx`, not raw Tailwind
+  colors, so light and dark mode keep working.

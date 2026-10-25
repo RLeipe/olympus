@@ -1,28 +1,39 @@
 import { useState, useEffect } from 'react'
 import { useUser } from '../contexts/UserContext'
+import { useToast } from '../contexts/ToastContext'
 import { supabase } from '../lib/supabase'
-import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import RecentLogs from '../components/RecentLogs'
 import DayNoteEditor from '../components/DayNoteEditor'
+import { PageHeader, Loading, Banner, Stepper, Sheet } from '../components/ui'
+import { PlusIcon, CheckIcon } from '../components/icons'
 import { toISODate } from '../utils/dates'
+
+// Where the steppers start when there is no recent set of the exercise to start from
+const DEFAULT_START = { reps: 5, weight: 20, seconds: 30 }
+
+const METRIC_TYPES = [
+  { value: 'one_rep_max', title: 'Weighted', description: 'Sets × reps × kg, tracks 1RM, 5RM and volume' },
+  { value: 'max_consecutive', title: 'Reps', description: 'Bodyweight reps, tracks max and total reps' },
+  { value: 'time_based', title: 'Time', description: 'Holds and hangs, tracks duration' }
+]
 
 export default function QuickLog() {
   const { currentUser } = useUser()
-  const navigate = useNavigate()
+  const toast = useToast()
   const [exercises, setExercises] = useState([])
   const [selectedExercise, setSelectedExercise] = useState('')
-  const [numSets, setNumSets] = useState(1)
+  const [numSets, setNumSets] = useState('1')
   const [reps, setReps] = useState('')
   const [weight, setWeight] = useState('')
   const [workoutDate, setWorkoutDate] = useState(new Date())
   const [dayNote, setDayNote] = useState('')
-  const [noteSaved, setNoteSaved] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showNewExercise, setShowNewExercise] = useState(false)
   const [recentLogs, setRecentLogs] = useState([])
+  const selectedEx = exercises.find(ex => ex.id === selectedExercise)
 
   useEffect(() => {
     fetchExercises()
@@ -36,7 +47,6 @@ export default function QuickLog() {
   }, [currentUser, workoutDate])
 
   async function fetchDayNote() {
-    setNoteSaved(false)
     const { data, error } = await supabase
       .from('day_notes')
       .select('note')
@@ -125,11 +135,11 @@ export default function QuickLog() {
       if (insertError) throw insertError
 
       // Success - reset form and refresh recent logs
-      setNumSets(1)
+      setNumSets('1')
       setReps('')
       setWeight('')
       fetchRecentLogs()
-      alert('Workout logged successfully!')
+      toast(`${selectedEx?.name || 'Workout'} logged`)
     } catch (err) {
       console.error('Error logging workout:', err)
       setError('Failed to log workout: ' + err.message)
@@ -139,207 +149,157 @@ export default function QuickLog() {
   }
 
   if (!currentUser) {
-    return <div className="p-8">Loading...</div>
+    return <Loading />
   }
 
+  const metricType = selectedEx?.metric_type
+  const isTime = metricType === 'time_based'
+  const isWeighted = !metricType || metricType === 'one_rep_max'
+
+  // Recently logged exercises as one-tap shortcuts, and the last set of the selected one as a starting point
+  const recentExercises = [...new Map(recentLogs
+    .filter(set => set.exercises)
+    .map(set => [set.exercise_id, set.exercises.name])).entries()].slice(0, 6)
+  const lastSet = recentLogs.find(set => set.exercise_id === selectedExercise)
+  const startReps = lastSet?.reps ?? (isTime ? DEFAULT_START.seconds : DEFAULT_START.reps)
+  const startWeight = lastSet?.weight ?? DEFAULT_START.weight
+
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  const selectedIso = toISODate(workoutDate)
+
+  const summary = reps
+    ? `${numSets || 1} × ${reps}${isTime ? ' s' : ''}${isWeighted && weight ? ` @ ${weight} kg` : ''}`
+    : null
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold mb-6">Quick Log Workout</h1>
+    <div className="max-w-xl mx-auto">
+      <PageHeader eyebrow={`${currentUser.name} · ${workoutDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })}`} title="Log" />
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Exercise Selection */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Exercise
-            </label>
-            <div className="flex gap-2 items-stretch">
-              <select
-                value={selectedExercise}
-                onChange={(e) => setSelectedExercise(e.target.value)}
-                className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                required
-              >
-                <option value="">Select an exercise...</option>
-                {exercises.map(ex => (
-                  <option key={ex.id} value={ex.id}>
-                    {ex.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => setShowNewExercise(true)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center"
-              >
-                + New
-              </button>
-            </div>
-          </div>
-
-          {/* Dynamic Input Fields based on Exercise Type */}
-          {(() => {
-            const selectedEx = exercises.find(ex => ex.id === selectedExercise)
-            const metricType = selectedEx?.metric_type
-
-            if (metricType === 'time_based') {
-              // Time-based exercises: Sets + Duration (seconds)
-              return (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Sets
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={numSets}
-                      onChange={(e) => setNumSets(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Duration (seconds)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={reps}
-                      onChange={(e) => setReps(e.target.value)}
-                      placeholder="60"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-              )
-            } else if (metricType === 'max_consecutive') {
-              // Reps-based exercises: Sets + Reps
-              return (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Sets
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={numSets}
-                      onChange={(e) => setNumSets(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Reps
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={reps}
-                      onChange={(e) => setReps(e.target.value)}
-                      placeholder="5"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-              )
-            } else {
-              // Weighted exercises: Sets + Reps + Weight
-              return (
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Sets
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={numSets}
-                      onChange={(e) => setNumSets(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Reps
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={reps}
-                      onChange={(e) => setReps(e.target.value)}
-                      placeholder="5"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Weight (kg)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.5"
-                      min="0"
-                      value={weight}
-                      onChange={(e) => setWeight(e.target.value)}
-                      placeholder="80"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Optional for bodyweight</p>
-                  </div>
-                </div>
-              )
-            }
-          })()}
-
-          {/* Date */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Date
-            </label>
-            <DatePicker
-              selected={workoutDate}
-              onChange={(date) => setWorkoutDate(date)}
-              dateFormat="MMM d, yyyy"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Error Display */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+      <form onSubmit={handleSubmit} className="card p-4 md:p-5">
+        {/* Exercise Selection */}
+        <label className="label" htmlFor="exercise">Exercise</label>
+        <div className="flex gap-2">
+          <select
+            id="exercise"
+            value={selectedExercise}
+            onChange={(e) => setSelectedExercise(e.target.value)}
+            className="input flex-1 font-semibold appearance-none bg-[length:16px] bg-no-repeat bg-[right_1rem_center] pr-10"
+            style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238a8d93%27 stroke-width=%272.5%27 stroke-linecap=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E")' }}
+            required
           >
-            {loading ? 'Logging...' : 'Log Workout'}
+            <option value="">Choose an exercise…</option>
+            {exercises.map(ex => (
+              <option key={ex.id} value={ex.id}>
+                {ex.name}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => setShowNewExercise(true)}
+            className="icon-btn h-12 w-12"
+            aria-label="New exercise"
+            title="New exercise"
+          >
+            <PlusIcon />
           </button>
-        </form>
-      </div>
+        </div>
+
+        {recentExercises.length > 0 && (
+          <div className="flex gap-1.5 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap mt-2.5 pb-1 [scrollbar-width:none]">
+            {recentExercises.map(([id, name]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setSelectedExercise(id)}
+                className={`h-8 px-3 rounded-full text-xs font-bold whitespace-nowrap transition
+                  ${selectedExercise === id ? 'bg-ink text-bg' : 'bg-sunken text-ink-soft hover:text-ink'}`}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Dynamic Input Fields based on Exercise Type */}
+        <div className="mt-4 divide-y divide-line/70 border-y border-line/70">
+          <Stepper label="Sets" value={numSets} onChange={setNumSets} min={1} start={1} />
+          <Stepper
+            label={isTime ? 'Duration' : 'Reps'}
+            hint={isTime ? 'seconds per set' : 'per set'}
+            value={reps}
+            onChange={setReps}
+            min={1}
+            step={isTime ? 5 : 1}
+            start={startReps}
+            placeholder={String(startReps)}
+            suffix={isTime ? 's' : undefined}
+          />
+          {isWeighted && (
+            <Stepper
+              label="Weight"
+              hint="kg · optional"
+              value={weight}
+              onChange={setWeight}
+              step={2.5}
+              start={startWeight}
+              placeholder={String(startWeight)}
+              decimal
+            />
+          )}
+        </div>
+
+        {/* Date */}
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="label mb-0">Date</span>
+            <div className="flex gap-1">
+              {[['Today', new Date()], ['Yesterday', yesterday]].map(([label, date]) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setWorkoutDate(date)}
+                  className={`h-7 px-2.5 rounded-full text-xs font-bold transition
+                    ${selectedIso === toISODate(date) ? 'bg-ink text-bg' : 'text-ink-soft hover:bg-sunken'}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <DatePicker
+            selected={workoutDate}
+            onChange={(date) => date && setWorkoutDate(date)}
+            dateFormat="EEEE, d MMM yyyy"
+            className="input font-semibold"
+            required
+          />
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="mt-4">
+            <Banner tone="error">{error}</Banner>
+          </div>
+        )}
+
+        {/* Submit */}
+        <button type="submit" disabled={loading} className="btn-primary w-full mt-5 h-14 text-base">
+          {loading ? 'Logging…' : (
+            <>
+              <CheckIcon className="w-5 h-5" strokeWidth={2.5} />
+              {summary ? `Log ${summary}` : 'Log sets'}
+            </>
+          )}
+        </button>
+      </form>
 
       {/* Session note for the selected date */}
-      <div className="bg-white rounded-lg shadow p-6 mt-6">
+      <div className="card p-4 md:p-5 mt-3">
         <div className="flex items-baseline justify-between mb-3">
-          <h2 className="text-lg font-semibold">Session note</h2>
-          <span className="text-sm text-gray-500">
+          <h2 className="font-bold">Session note</h2>
+          <span className="text-xs text-ink-faint">
             {workoutDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}
           </span>
         </div>
@@ -347,23 +307,23 @@ export default function QuickLog() {
           userId={currentUser.id}
           date={toISODate(workoutDate)}
           initialNote={dayNote}
-          onSaved={(saved) => { setDayNote(saved); setNoteSaved(true) }}
+          onSaved={(saved) => { setDayNote(saved); toast(saved ? 'Note saved' : 'Note removed') }}
         />
-        {noteSaved && <p className="text-sm text-emerald-600 mt-2">Note saved.</p>}
       </div>
 
       {/* Recent Logs */}
-      <div className="mt-8">
+      <div className="mt-3">
         <RecentLogs workoutSets={recentLogs} onDelete={fetchRecentLogs} />
       </div>
 
-      {/* New Exercise Modal (simple version) */}
       {showNewExercise && (
         <NewExerciseModal
           onClose={() => setShowNewExercise(false)}
-          onSuccess={() => {
+          onSuccess={(exercise) => {
             setShowNewExercise(false)
             fetchExercises()
+            if (exercise) setSelectedExercise(exercise.id)
+            toast(`${exercise?.name || 'Exercise'} added`)
           }}
         />
       )}
@@ -384,7 +344,7 @@ function NewExerciseModal({ onClose, onSuccess }) {
     setLoading(true)
 
     try {
-      const { error: insertError } = await supabase
+      const { data, error: insertError } = await supabase
         .from('exercises')
         .insert({
           name,
@@ -392,10 +352,12 @@ function NewExerciseModal({ onClose, onSuccess }) {
           metric_type: metricType,
           notes: notes || null
         })
+        .select()
+        .single()
 
       if (insertError) throw insertError
 
-      onSuccess()
+      onSuccess(data)
     } catch (err) {
       console.error('Error creating exercise:', err)
       setError('Failed to create exercise: ' + err.message)
@@ -405,71 +367,61 @@ function NewExerciseModal({ onClose, onSuccess }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4">Add New Exercise</h2>
+    <Sheet title="New exercise" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="label" htmlFor="exercise-name">Name</label>
+          <input
+            id="exercise-name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Deadlift"
+            className="input"
+            required
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Deadlift"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              required
-            />
+        <div>
+          <span className="label">How it's tracked</span>
+          <div className="space-y-2">
+            {METRIC_TYPES.map(type => (
+              <button
+                key={type.value}
+                type="button"
+                onClick={() => setMetricType(type.value)}
+                aria-pressed={metricType === type.value}
+                className={`w-full text-left rounded-xl px-4 py-3 border transition flex items-center gap-3
+                  ${metricType === type.value ? 'border-ink bg-sunken' : 'border-line hover:bg-sunken/60'}`}
+              >
+                <span className={`w-4 h-4 rounded-full border-2 shrink-0 ${metricType === type.value ? 'border-ink bg-ink shadow-[inset_0_0_0_2px_rgb(var(--sunken))]' : 'border-line'}`} />
+                <span>
+                  <span className="block text-sm font-bold">{type.title}</span>
+                  <span className="block text-xs text-ink-faint">{type.description}</span>
+                </span>
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Metric Type</label>
-            <select
-              value={metricType}
-              onChange={(e) => setMetricType(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="one_rep_max">Weighted (1RM, 5RM tracking)</option>
-              <option value="max_consecutive">Reps (max consecutive, total reps)</option>
-              <option value="time_based">Time-based (duration)</option>
-            </select>
-          </div>
+        <div>
+          <label className="label" htmlFor="exercise-notes">Notes (optional)</label>
+          <textarea
+            id="exercise-notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Form cues, variations, etc."
+            rows={2}
+            className="input h-auto py-3"
+          />
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Notes (optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Form cues, variations, etc."
-              rows={2}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+        {error && <Banner tone="error">{error}</Banner>}
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
-              {error}
-            </div>
-          )}
-
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-            >
-              {loading ? 'Adding...' : 'Add Exercise'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <button type="submit" disabled={loading} className="btn-primary w-full">
+          {loading ? 'Adding…' : 'Add exercise'}
+        </button>
+      </form>
+    </Sheet>
   )
 }

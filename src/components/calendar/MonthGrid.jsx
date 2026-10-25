@@ -11,13 +11,13 @@ export default function MonthGrid({ monthStart, days, notes, todayIso, onSelect 
   const gridEnd = addDays(startOfWeek(lastOfMonth), 6)
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-3">
-      <div className="grid grid-cols-7 gap-1 mb-1">
+    <div className="card p-2 md:p-4">
+      <div className="grid grid-cols-7 gap-1 md:gap-1.5 mb-1">
         {WEEKDAYS.map(d => (
-          <div key={d} className="text-center text-xs font-semibold text-gray-400 py-1">{d}</div>
+          <div key={d} className="eyebrow text-center py-1.5 tracking-[0.08em]">{d}</div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1 md:gap-1.5">
         {dateRange(gridStart, gridEnd).map(date => {
           const inMonth = date.startsWith(month)
           const day = days[date]
@@ -33,25 +33,22 @@ export default function MonthGrid({ monthStart, days, notes, todayIso, onSelect 
             <button
               key={date}
               onClick={() => onSelect(date)}
-              className={`min-h-[64px] md:min-h-[88px] rounded-lg border p-1 text-left flex flex-col gap-1 transition-colors hover:border-blue-300
-                ${inMonth ? 'bg-white' : 'bg-gray-50 opacity-50'}
-                ${isToday ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-100'}`}
+              className={`min-h-[68px] md:min-h-[92px] rounded-xl p-1.5 text-left flex flex-col gap-1.5 transition
+                ${inMonth ? 'bg-sunken/60 hover:bg-sunken' : 'opacity-35 hover:opacity-60'}`}
             >
               <div className="flex items-center justify-between">
-                <span className={`text-xs font-semibold ${isToday ? 'text-blue-700' : 'text-gray-600'}`}>
+                <span className={`num text-sm md:text-base font-semibold leading-none
+                  ${isToday ? 'bg-accent text-accent-ink rounded-full w-6 h-6 -m-0.5 flex items-center justify-center' : 'text-ink-soft'}`}>
                   {parseISODate(date).getDate()}
                 </span>
-                {notes[date] && <span className="text-[10px] text-yellow-600" title="Has a note">✎</span>}
+                {notes[date] && <span className="w-1.5 h-1.5 rounded-full bg-partial" title="Has a note" />}
               </div>
-              <div className="flex flex-wrap gap-0.5">
+              <div className="flex flex-wrap gap-0.5 md:gap-1">
                 {markers.map((m, i) => (
                   <span
                     key={i}
                     title={`${m.type} · ${STATUS_STYLES[m.status].label}`}
-                    className={`w-5 h-5 md:w-6 md:h-6 rounded text-[10px] md:text-xs font-bold flex items-center justify-center
-                      ${m.status === 'planned' || m.status === 'today'
-                        ? `border ${m.status === 'today' ? 'border-blue-400 text-blue-600' : 'border-gray-300 text-gray-400'} border-dashed`
-                        : `${STATUS_STYLES[m.status].dot} text-white`}`}
+                    className={`w-[18px] h-[18px] md:w-6 md:h-6 rounded-md text-[10px] md:text-xs font-extrabold flex items-center justify-center ${STATUS_STYLES[m.status].marker}`}
                   >
                     {TYPE_LETTER[m.type]}
                   </span>
@@ -61,6 +58,21 @@ export default function MonthGrid({ monthStart, days, notes, todayIso, onSelect 
           )
         })}
       </div>
+      <Legend />
+    </div>
+  )
+}
+
+function Legend() {
+  return (
+    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 px-1 text-[11px] text-ink-faint font-semibold">
+      {['done', 'partial', 'missed', 'extra', 'planned'].map(status => (
+        <span key={status} className="inline-flex items-center gap-1.5">
+          <span className={`w-2.5 h-2.5 rounded-[3px] ${STATUS_STYLES[status].marker}`} />
+          {STATUS_STYLES[status].label}
+        </span>
+      ))}
+      <span className="ml-auto">R run · S strength · O other</span>
     </div>
   )
 }

@@ -51,12 +51,12 @@ not change anything by itself; it is read at the next planning session.
 
 | Page | What it does |
 | --- | --- |
-| **Stats** (`/`) | Charts per exercise that has data: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration), plus body weight |
+| **Stats** (`/`) | Summary tiles, body weight, and a card per exercise with its latest top set / max reps / longest hold and a trend line; tap a card for the full chart: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration) |
 | **Calendar** (`/calendar`) | 2-week and month views with plan vs. actual, day notes, weekly consistency, Strava connect/sync |
 | **Weight** (`/bodyweight`) | Log body weight |
 | **Log** (`/log`) | Log sets (sets × reps × kg, or duration), add exercises, write the session note, delete recent entries |
 
-The user switcher in the header defaults to Roman.
+The user switcher in the header defaults to Roman. On phones the pages are in a bottom tab bar. The app follows the system light/dark setting.
 
 ## Architecture
 
@@ -92,6 +92,9 @@ Schema changes go in `supabase/migrations/` and are run by hand in the Supabase 
 ### Code map
 
 - `src/pages/`: Dashboard (Stats), Calendar, QuickLog (Log), BodyWeight
+- `src/index.css`, `tailwind.config.js`: design tokens (colors for light and dark mode, fonts)
+- `src/components/ui.jsx`, `icons.jsx`: shared UI pieces (stepper, sheet, segmented control, ...) and icons
+- `src/components/charts/`: exercise and body weight charts with a shared theme
 - `src/components/calendar/`: day cards, month grid, consistency strip, Strava bar
 - `src/utils/planCore.js`: plan parsing and validation
 - `src/utils/matching.js`: plan vs. actual matching (shared by the app and the scripts)

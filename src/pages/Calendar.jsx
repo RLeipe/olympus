@@ -9,14 +9,16 @@ import DayCard from '../components/calendar/DayCard'
 import MonthGrid from '../components/calendar/MonthGrid'
 import WeekStrip from '../components/calendar/WeekStrip'
 import StravaBar from '../components/calendar/StravaBar'
+import { Banner, Loading, Segmented, Sheet } from '../components/ui'
+import { ChevronLeftIcon, ChevronRightIcon } from '../components/icons'
 
 const STRIP_WEEKS = 8
 const VIEW_KEY = 'olympus.calendarView'
 
 const STRAVA_MESSAGES = {
-  connected: { text: 'Strava connected. Syncing your activities...', className: 'bg-emerald-50 border-emerald-200 text-emerald-800' },
-  denied: { text: 'Strava connection was cancelled.', className: 'bg-amber-50 border-amber-200 text-amber-800' },
-  'missing-scope': { text: 'Strava needs permission to read your activities. Please connect again and keep the activity checkbox ticked.', className: 'bg-amber-50 border-amber-200 text-amber-800' }
+  connected: { text: 'Strava connected. Syncing your activities...', tone: 'success' },
+  denied: { text: 'Strava connection was cancelled.', tone: 'warn' },
+  'missing-scope': { text: 'Strava needs permission to read your activities. Please connect again and keep the activity checkbox ticked.', tone: 'warn' }
 }
 
 function readView() {
@@ -89,62 +91,54 @@ export default function Calendar() {
     setAnchor(view === 'weeks' ? addDays(anchor, 7 * direction) : addMonths(anchor, direction))
   }
 
-  if (!currentUser) return <div className="p-8">Loading...</div>
+  if (!currentUser) return <Loading />
 
   const hasPlan = plan.sessions.length > 0
   const message = STRAVA_MESSAGES[stravaMessage]
 
   return (
-    <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 max-w-6xl space-y-4">
+    <div className="space-y-4">
       {message && (
-        <div className={`border rounded-lg px-4 py-3 text-sm flex justify-between gap-2 ${message.className}`}>
-          <span>{message.text}</span>
-          <button onClick={() => setStravaMessage(null)} className="font-bold">×</button>
-        </div>
+        <Banner tone={message.tone} onClose={() => setStravaMessage(null)}>{message.text}</Banner>
       )}
 
       {training.needsMigration && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg px-4 py-3 text-sm">
+        <Banner>
           Database update missing: run <code>supabase/migrations/002_plan_notes_strava.sql</code> in the Supabase SQL editor.
-        </div>
+        </Banner>
       )}
 
       {plan.errors.length > 0 && (
-        <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm">
-          <p className="font-semibold mb-1">Some plan entries could not be read and are hidden:</p>
-          <ul className="list-disc pl-5">{plan.errors.map((e, i) => <li key={i}>{e}</li>)}</ul>
-        </div>
+        <Banner tone="error">
+          <p className="font-bold mb-1">Some plan entries could not be read and are hidden:</p>
+          <ul className="list-disc pl-5 font-normal">{plan.errors.map((e, i) => <li key={i}>{e}</li>)}</ul>
+        </Banner>
       )}
 
       {training.error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
-          Failed to load data: {training.error}
-        </div>
+        <Banner tone="error">Failed to load data: {training.error}</Banner>
       )}
+
+      <div className="flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className="eyebrow mb-1">{currentUser.name} · {view === 'weeks' ? 'Two weeks' : 'Month'}</div>
+          <h1 className="font-display font-semibold text-3xl md:text-5xl leading-none tracking-tight uppercase truncate">
+            {rangeTitle(view, anchor, range)}
+          </h1>
+        </div>
+        <div className="flex items-center gap-1 shrink-0">
+          <button onClick={() => move(-1)} className="icon-btn rounded-full" aria-label="Previous"><ChevronLeftIcon /></button>
+          <button onClick={() => setAnchor(todayIso)} className="btn-secondary rounded-full px-3.5">Today</button>
+          <button onClick={() => move(1)} className="icon-btn rounded-full" aria-label="Next"><ChevronRightIcon /></button>
+        </div>
+      </div>
 
       <WeekStrip weeks={weeks} hasPlan={hasPlan} />
 
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1">
-          <button onClick={() => move(-1)} className="w-9 h-9 rounded-lg bg-white border hover:bg-gray-50 font-bold text-gray-600" aria-label="Previous">‹</button>
-          <button onClick={() => setAnchor(todayIso)} className="h-9 px-3 rounded-lg bg-white border hover:bg-gray-50 text-sm font-medium">Today</button>
-          <button onClick={() => move(1)} className="w-9 h-9 rounded-lg bg-white border hover:bg-gray-50 font-bold text-gray-600" aria-label="Next">›</button>
-          <h1 className="ml-2 text-base md:text-xl font-bold text-gray-900">{rangeTitle(view, anchor, range)}</h1>
-        </div>
-        <div className="flex bg-white border rounded-lg p-0.5 text-sm font-medium">
-          {[['weeks', '2 weeks'], ['month', 'Month']].map(([value, label]) => (
-            <button
-              key={value}
-              onClick={() => changeView(value)}
-              className={`px-3 py-1.5 rounded-md ${view === value ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <Segmented value={view} onChange={changeView} options={[['weeks', '2 weeks'], ['month', 'Month']]} />
+        <StravaBar strava={strava} />
       </div>
-
-      <StravaBar strava={strava} />
 
       <div className={training.loading ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
         {view === 'weeks' ? (
@@ -169,28 +163,26 @@ export default function Calendar() {
       </div>
 
       {!hasPlan && (
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-ink-faint text-center">
           No training plan yet for {currentUser.name}. Plans live in <code>plan/{currentUser.name.toLowerCase()}/</code>.
         </p>
       )}
 
       {selectedDate && (
-        <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center p-3 z-50" onClick={() => setSelectedDate(null)}>
-          <div className="bg-white rounded-xl p-4 w-full max-w-md max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-end -mt-1 mb-1">
-              <button onClick={() => setSelectedDate(null)} className="text-sm text-gray-500 hover:text-gray-800 font-medium">Close</button>
-            </div>
-            <DayCard
-              bare
-              date={selectedDate}
-              day={days[selectedDate]}
-              note={training.notes[selectedDate]}
-              isToday={selectedDate === todayIso}
-              userId={currentUser.id}
-              onNoteSaved={training.setNote}
-            />
-          </div>
-        </div>
+        <Sheet
+          title={parseISODate(selectedDate).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
+          onClose={() => setSelectedDate(null)}
+        >
+          <DayCard
+            bare
+            date={selectedDate}
+            day={days[selectedDate]}
+            note={training.notes[selectedDate]}
+            isToday={selectedDate === todayIso}
+            userId={currentUser.id}
+            onNoteSaved={training.setNote}
+          />
+        </Sheet>
       )}
     </div>
   )
@@ -200,20 +192,25 @@ function TwoWeeks({ range, days, weeks, notes, todayIso, userId, onNoteSaved }) 
   const weekStarts = [range.start, addDays(range.start, 7)]
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {weekStarts.map(weekStart => {
         const summary = weeks.find(w => w.start === weekStart)
         return (
           <section key={weekStart}>
-            <div className="flex items-baseline justify-between mb-2 px-1">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            <div className="flex items-center justify-between gap-3 mb-2.5 px-1">
+              <h2 className="eyebrow">
                 Week of {parseISODate(weekStart).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </h2>
               {summary?.planned > 0 && (
-                <span className="text-xs text-gray-500">{summary.done}/{summary.planned} done</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-16 h-1.5 rounded-full bg-sunken overflow-hidden">
+                    <div className="h-full bg-accent-strong rounded-full" style={{ width: `${Math.min(1, summary.done / summary.planned) * 100}%` }} />
+                  </div>
+                  <span className="text-xs font-semibold text-ink-soft tabular-nums">{summary.done}/{summary.planned}</span>
+                </div>
               )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 items-start">
               {dateRange(weekStart, addDays(weekStart, 6)).map(date => (
                 <DayCard
                   key={date}
