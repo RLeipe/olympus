@@ -1,0 +1,57 @@
+# Block 1, week 1 of 4 (26 Oct - 22 Nov): focused days, varied running, week 4 easier
+sessions:
+  - date: 2026-10-26
+    type: strength
+    title: Back & posterior chain
+    exercises:
+      - { name: Deadlifts, sets: 4, reps: 5, weight: 85 }
+      - { name: Good Mornings, sets: 3, reps: 10, weight: 32.5 }
+      - { name: Rows, sets: 4, reps: 8, weight: 45 }
+      - { name: Pull Ups, sets: 5, reps: 4 }
+    notes: Pull-ups submaximal, stop with 1-2 reps left; superset them with the rows
+
+  - date: 2026-10-27
+    type: run
+    kind: intervals
+    title: Hill reps
+    distance_km: 8
+    intervals:
+      reps: 8
+      duration_s: 45
+      recovery: jog back down
+    notes: 2 km easy to a hill, 8 x 45 s uphill hard (strong, not all-out), easy home. No hill → 45 s fast on the flat, 75 s jog
+
+  - date: 2026-10-28
+    type: strength
+    title: Legs & core
+    exercises:
+      - { name: Squats, sets: 4, reps: 5, weight: 70 }
+      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 60 }
+      - { name: Split Squats, sets: 3, reps: 8, weight: 20 }
+      - { name: Calf Raises, sets: 3, reps: 15, weight: 40 }
+      - { name: Pull Ups, sets: 3, reps: 4 }
+    notes: Split squats 8 per leg, rear foot on a bench or box if you have one. Pull-ups easy, between squat sets
+
+  - date: 2026-10-29
+    type: run
+    kind: easy
+    distance_km: 9
+    max_hr: 160
+    notes: Finish with 6 x 20 s strides (quick and relaxed, full recovery)
+
+  - date: 2026-10-30
+    type: strength
+    title: Upper body & posture
+    exercises:
+      - { name: Overhead Press, sets: 4, reps: 6, weight: 32.5 }
+      - { name: Pull Ups, sets: 3, reps: max }
+      - { name: Dips, sets: 3, reps: 6 }
+      - { name: Curls, sets: 3, reps: 10, weight: 35 }
+      - { name: Dead Hang, sets: 3, seconds: 30 }
+      - { name: Plank, sets: 3, seconds: 45 }
+
+  - date: 2026-10-31
+    type: run
+    kind: long
+    distance_km: 14
+    max_hr: 160

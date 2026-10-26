@@ -1,0 +1,177 @@
+# Block 1, weeks 1-4 (26 Oct - 22 Nov): focused days, varied running, week 4 easier
+sessions:
+  - date: 2026-11-01
+    type: rest
+
+  # Week 2
+  - date: 2026-11-02
+    type: strength
+    title: Back & posterior chain
+    exercises:
+      - { name: Deadlifts, sets: 4, reps: 5, weight: 87.5 }
+      - { name: Good Mornings, sets: 3, reps: 10, weight: 35 }
+      - { name: Rows, sets: 4, reps: 8, weight: 47.5 }
+      - { name: Pull Ups, sets: 5, reps: 5 }
+    notes: Pull-ups submaximal, stop with 1-2 reps left
+
+  - date: 2026-11-03
+    type: run
+    kind: intervals
+    distance_km: 9
+    intervals:
+      reps: 5
+      distance_m: 1000
+      pace: "5:00"
+      recovery: 2 min jog
+    notes: 2 km warm-up, 5 x 1 km with laps, rest cool-down
+
+  - date: 2026-11-04
+    type: strength
+    title: Legs & core
+    exercises:
+      - { name: Squats, sets: 4, reps: 5, weight: 72.5 }
+      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 62.5 }
+      - { name: Split Squats, sets: 3, reps: 8, weight: 22.5 }
+      - { name: Calf Raises, sets: 3, reps: 15, weight: 42.5 }
+      - { name: Pull Ups, sets: 3, reps: 4 }
+    notes: Split squats 8 per leg
+
+  - date: 2026-11-05
+    type: run
+    kind: easy
+    title: Exploration run
+    distance_km: 8
+    max_hr: 160
+    notes: A route you have never run. No pace goal
+
+  - date: 2026-11-06
+    type: strength
+    title: Upper body & posture
+    exercises:
+      - { name: Overhead Press, sets: 4, reps: 7, weight: 32.5 }
+      - { name: Pull Ups, sets: 3, reps: max }
+      - { name: Dips, sets: 3, reps: 7 }
+      - { name: Curls, sets: 3, reps: 12, weight: 35 }
+      - { name: Dead Hang, sets: 3, seconds: 40 }
+      - { name: Plank, sets: 3, seconds: 50 }
+
+  - date: 2026-11-07
+    type: run
+    kind: long
+    title: Hilly long run
+    distance_km: 16
+    elevation_m: 200
+    notes: Trail or hills if you can, a first taste of Rennsteig. Easy effort; HR may go above 160 on climbs, walk steep bits
+
+  - date: 2026-11-08
+    type: rest
+
+  # Week 3
+  - date: 2026-11-09
+    type: strength
+    title: Back & posterior chain
+    exercises:
+      - { name: Deadlifts, sets: 4, reps: 5, weight: 90 }
+      - { name: Good Mornings, sets: 3, reps: 10, weight: 37.5 }
+      - { name: Rows, sets: 4, reps: 8, weight: 50 }
+      - { name: Pull Ups, sets: 6, reps: 5 }
+    notes: Pull-ups submaximal, stop with 1-2 reps left
+
+  - date: 2026-11-10
+    type: run
+    kind: tempo
+    distance_km: 9
+    pace: "5:20"
+    notes: 2 km easy, 5 km at 5:20 (comfortably hard), 2 km easy
+
+  - date: 2026-11-11
+    type: strength
+    title: Legs & core
+    exercises:
+      - { name: Squats, sets: 4, reps: 5, weight: 75 }
+      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 65 }
+      - { name: Split Squats, sets: 3, reps: 8, weight: 25 }
+      - { name: Calf Raises, sets: 3, reps: 15, weight: 45 }
+      - { name: Pull Ups, sets: 3, reps: 4 }
+    notes: Split squats 8 per leg
+
+  - date: 2026-11-12
+    type: run
+    kind: easy
+    distance_km: 10
+    max_hr: 160
+
+  - date: 2026-11-13
+    type: strength
+    title: Upper body & posture
+    exercises:
+      - { name: Overhead Press, sets: 4, reps: 8, weight: 32.5 }
+      - { name: Pull Ups, sets: 3, reps: max }
+      - { name: Dips, sets: 3, reps: 8 }
+      - { name: Curls, sets: 3, reps: 12, weight: 35 }
+      - { name: Dead Hang, sets: 3, seconds: 45 }
+      - { name: Plank, sets: 3, seconds: 60 }
+
+  - date: 2026-11-14
+    type: run
+    kind: long
+    distance_km: 17
+    max_hr: 160
+    notes: Last 2 km a bit quicker (around 5:45) if you feel good
+
+  - date: 2026-11-15
+    type: rest
+
+  # Week 4: easier, ends with a 5 km test
+  - date: 2026-11-16
+    type: strength
+    title: Back & posterior chain (easy week)
+    exercises:
+      - { name: Deadlifts, sets: 3, reps: 5, weight: 75 }
+      - { name: Good Mornings, sets: 2, reps: 10, weight: 30 }
+      - { name: Rows, sets: 3, reps: 8, weight: 40 }
+      - { name: Pull Ups, sets: 3, reps: 4 }
+
+  - date: 2026-11-17
+    type: run
+    kind: easy
+    distance_km: 7
+    max_hr: 160
+    notes: Finish with 6 x 20 s strides
+
+  - date: 2026-11-18
+    type: strength
+    title: Legs & core (easy week)
+    exercises:
+      - { name: Squats, sets: 3, reps: 5, weight: 65 }
+      - { name: Romanian Deadlifts, sets: 2, reps: 8, weight: 55 }
+      - { name: Split Squats, sets: 2, reps: 8, weight: 20 }
+      - { name: Calf Raises, sets: 2, reps: 15, weight: 40 }
+      - { name: Pull Ups, sets: 2, reps: 4 }
+
+  - date: 2026-11-19
+    type: run
+    kind: easy
+    distance_km: 7
+    max_hr: 160
+
+  - date: 2026-11-20
+    type: strength
+    title: Upper body & posture (easy week)
+    exercises:
+      - { name: Overhead Press, sets: 3, reps: 6, weight: 30 }
+      - { name: Pull Ups, sets: 1, reps: max }
+      - { name: Dips, sets: 2, reps: 6 }
+      - { name: Curls, sets: 2, reps: 10, weight: 35 }
+      - { name: Dead Hang, sets: 2, seconds: 30 }
+    notes: Pull-ups is a single max set, a test of your best set after the block. Fresh, full range
+
+  - date: 2026-11-21
+    type: run
+    kind: race
+    title: 5 km time trial
+    distance_km: 9
+    notes: Parkrun or solo on a flat route. 2-3 km warm-up incl. a few strides, 5 km all out but evenly paced (aim for about 5:00/km, faster if it feels good), easy cool-down
+
+  - date: 2026-11-22
+    type: rest
