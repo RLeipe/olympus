@@ -1,5 +1,5 @@
 import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { COLORS, xAxisProps, yAxisProps, gridProps, cursorProps, lineDot, activeDot, ChartLegend, TooltipCard, EmptyChart } from './chartTheme'
+import { COLORS, xAxisProps, spacedData, yAxisProps, gridProps, cursorProps, lineDot, activeDot, ChartLegend, TooltipCard, EmptyChart } from './chartTheme'
 
 function WeightedTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
@@ -17,7 +17,7 @@ function WeightedTooltip({ active, payload }) {
   )
 }
 
-export default function WeightedExerciseChart({ data }) {
+export default function WeightedExerciseChart({ data, spacing }) {
   if (!data || data.length === 0) return <EmptyChart />
 
   return (
@@ -28,9 +28,9 @@ export default function WeightedExerciseChart({ data }) {
         { label: 'Volume', color: COLORS.bar, kind: 'bar' }
       ]} />
       <ResponsiveContainer width="100%" height={200}>
-        <ComposedChart data={data} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
+        <ComposedChart data={spacedData(data, spacing)} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
           <CartesianGrid {...gridProps} />
-          <XAxis {...xAxisProps} />
+          <XAxis {...xAxisProps(spacing)} />
           <YAxis yAxisId="left" {...yAxisProps} domain={['auto', 'auto']} />
           <YAxis yAxisId="right" orientation="right" hide />
           <Tooltip content={<WeightedTooltip />} cursor={cursorProps} />

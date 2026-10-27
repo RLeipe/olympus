@@ -8,11 +8,13 @@ import WeightedExerciseChart from '../components/charts/WeightedExerciseChart'
 import RepsExerciseChart from '../components/charts/RepsExerciseChart'
 import TimeBasedExerciseChart from '../components/charts/TimeBasedExerciseChart'
 import BodyWeightChart from '../components/charts/BodyWeightChart'
+import { SPACINGS } from '../components/charts/chartTheme'
 import { PageHeader, Loading, Segmented } from '../components/ui'
 import { PlusIcon } from '../components/icons'
 
 const RANGES = [['3m', '3M', 91], ['1y', '1Y', 365], ['all', 'All', null]]
 const RANGE_KEY = 'olympus.statsRange'
+const SPACING_KEY = 'olympus.statsSpacing'
 
 const AGGREGATE = {
   one_rep_max: aggregateWeightedExercise,
@@ -26,13 +28,18 @@ const CHART = {
   time_based: TimeBasedExerciseChart
 }
 
-function readRange() {
+// A remembered choice, if it is still one of the options
+function readChoice(key, options, fallback) {
   try {
-    const stored = localStorage.getItem(RANGE_KEY)
-    return RANGES.some(([value]) => value === stored) ? stored : 'all'
+    const stored = localStorage.getItem(key)
+    return options.some(([value]) => value === stored) ? stored : fallback
   } catch {
-    return 'all'
+    return fallback
   }
+}
+
+function saveChoice(key, value) {
+  try { localStorage.setItem(key, value) } catch { /* private mode */ }
 }
 
 export default function Dashboard() {
@@ -41,7 +48,8 @@ export default function Dashboard() {
   const [exerciseData, setExerciseData] = useState({})
   const [bodyWeightData, setBodyWeightData] = useState([])
   const [loading, setLoading] = useState(true)
-  const [range, setRange] = useState(readRange)
+  const [range, setRange] = useState(() => readChoice(RANGE_KEY, RANGES, 'all'))
+  const [spacing, setSpacing] = useState(() => readChoice(SPACING_KEY, SPACINGS, 'even'))
 
   useEffect(() => {
     if (currentUser) {
@@ -93,7 +101,12 @@ export default function Dashboard() {
 
   function changeRange(next) {
     setRange(next)
-    try { localStorage.setItem(RANGE_KEY, next) } catch { /* private mode */ }
+    saveChoice(RANGE_KEY, next)
+  }
+
+  function changeSpacing(next) {
+    setSpacing(next)
+    saveChoice(SPACING_KEY, next)
   }
 
   const todayIso = today()
@@ -114,11 +127,14 @@ export default function Dashboard() {
   return (
     <div>
       <PageHeader title="Stats">
-        <Segmented size="sm" value={range} onChange={changeRange} options={RANGES.map(([value, label]) => [value, label])} />
+        <div className="flex items-center gap-2">
+          <Segmented size="sm" value={range} onChange={changeRange} options={RANGES.map(([value, label]) => [value, label])} />
+          <Segmented size="sm" value={spacing} onChange={changeSpacing} options={SPACINGS} />
+        </div>
       </PageHeader>
 
       {bodyWeightData.length > 0 && (
-        <BodyWeightCard all={bodyWeightData} inRange={weightInRange} />
+        <BodyWeightCard all={bodyWeightData} inRange={weightInRange} spacing={spacing} />
       )}
 
       {trained.length === 0 ? (
@@ -129,7 +145,7 @@ export default function Dashboard() {
       ) : (
         <div className="grid gap-3 md:grid-cols-2 mt-3">
           {trained.map(({ exercise, data }) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} data={data.filter(d => d.date >= rangeStart)} />
+            <ExerciseCard key={exercise.id} exercise={exercise} data={data.filter(d => d.date >= rangeStart)} spacing={spacing} />
           ))}
         </div>
       )}
@@ -137,7 +153,7 @@ export default function Dashboard() {
   )
 }
 
-function BodyWeightCard({ all, inRange }) {
+function BodyWeightCard({ all, inRange, spacing }) {
   const latest = Number(all[all.length - 1].weight)
   const first = inRange.length > 1 ? Number(inRange[0].weight) : null
   const change = first === null ? null : latest - first
@@ -161,19 +177,19 @@ function BodyWeightCard({ all, inRange }) {
           </div>
         )}
       </div>
-      <BodyWeightChart data={inRange} height={180} />
+      <BodyWeightChart data={inRange} height={180} spacing={spacing} />
     </div>
   )
 }
 
-function ExerciseCard({ exercise, data }) {
+function ExerciseCard({ exercise, data, spacing }) {
   const Chart = CHART[exercise.metric_type]
   if (!Chart) return null
 
   return (
     <div className="card p-4">
       <h3 className="font-bold mb-2">{exercise.name}</h3>
-      <Chart data={data} />
+      <Chart data={data} spacing={spacing} />
     </div>
   )
 }

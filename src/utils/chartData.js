@@ -137,6 +137,24 @@ export function formatSeconds(seconds) {
 }
 
 /**
+ * Adds a timestamp `t` to each point, for charts spaced by calendar date
+ * @param {Array} data - points with a `date` (YYYY-MM-DD)
+ * @returns {Array} same points with `t`
+ */
+export function withTime(data) {
+  return data.map(d => ({ ...d, t: parseISODate(d.date).getTime() }))
+}
+
+/**
+ * Formats a timestamp from withTime() as a short date ("15 Jan")
+ * @param {number} t
+ * @returns {string}
+ */
+export function formatTimeTick(t) {
+  return new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+}
+
+/**
  * Formats a date for display in charts
  * @param {string} dateString - ISO date string (YYYY-MM-DD)
  * @returns {string} Formatted date (e.g., "15 Jan")

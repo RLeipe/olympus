@@ -3,7 +3,7 @@ import { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, XIcon } from './icons'
 
 export function PageHeader({ eyebrow, title, children }) {
   return (
-    <div className="flex items-end justify-between gap-3 mb-5 md:mb-7">
+    <div className="flex flex-wrap items-end justify-between gap-3 mb-5 md:mb-7">
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
         <h1 className="title text-3xl md:text-4xl">{title}</h1>

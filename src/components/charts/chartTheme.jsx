@@ -1,4 +1,4 @@
-import { formatChartDate } from '../../utils/chartData'
+import { formatChartDate, formatTimeTick, withTime } from '../../utils/chartData'
 
 // Chart colors follow the CSS tokens in src/index.css
 export const COLORS = {
@@ -12,16 +12,22 @@ export const COLORS = {
 
 const tick = { fontSize: 12.5, fill: COLORS.axis, fontWeight: 500 }
 
-// Sessions are spaced evenly, whatever the time between them, so a long break
-// doesn't squeeze everything else to the edges
-export const xAxisProps = {
-  dataKey: 'date',
-  tickFormatter: formatChartDate,
-  tick,
-  tickLine: false,
-  axisLine: false,
-  tickMargin: 8,
-  minTickGap: 28
+// How the x axis spaces sessions: 'even' puts them side by side whatever the time
+// between them (a long break doesn't squeeze everything to the edges), 'calendar'
+// spaces them by date.
+export const SPACINGS = [['even', 'Even'], ['calendar', 'By date']]
+
+const axisBase = { tick, tickLine: false, axisLine: false, tickMargin: 8, minTickGap: 28 }
+
+export function xAxisProps(spacing = 'even') {
+  return spacing === 'calendar'
+    ? { ...axisBase, dataKey: 't', type: 'number', scale: 'time', domain: ['dataMin', 'dataMax'], tickFormatter: formatTimeTick, padding: { left: 10, right: 10 } }
+    : { ...axisBase, dataKey: 'date', tickFormatter: formatChartDate }
+}
+
+// Chart data for the spacing; calendar spacing needs a timestamp per point
+export function spacedData(data, spacing = 'even') {
+  return spacing === 'calendar' ? withTime(data) : data
 }
 
 export const yAxisProps = {
