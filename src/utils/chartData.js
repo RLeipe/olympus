@@ -5,7 +5,7 @@ import { parseISODate } from './dates'
  * Groups by date and calculates 1RM, 5RM, and total volume
  *
  * @param {Array} workoutSets - Array of workout_sets from Supabase
- * @returns {Array} Chart data with { date, rm1, rm5, volume, topWeight, topReps }
+ * @returns {Array} Chart data with { date, rm1, rm5, volume }
  */
 export function aggregateWeightedExercise(workoutSets) {
   // Group by date
@@ -34,18 +34,11 @@ export function aggregateWeightedExercise(workoutSets) {
       return sum + (s.weight || 0) * s.reps
     }, 0)
 
-    // Top set: heaviest weight of the day, with the most reps done at that weight
-    const weighted = sets.filter(s => s.weight)
-    const topWeight = weighted.length > 0 ? Math.max(...weighted.map(s => s.weight)) : null
-    const topReps = topWeight ? Math.max(...weighted.filter(s => s.weight === topWeight).map(s => s.reps)) : null
-
     return {
       date,
       rm1,
       rm5,
       volume,
-      topWeight,
-      topReps,
       sets // Keep original sets for tooltip
     }
   })
@@ -132,38 +125,6 @@ export function aggregateTimeBasedExercise(workoutSets) {
   return chartData.sort((a, b) => new Date(a.date) - new Date(b.date))
 }
 
-// Headline number per metric type, used for the cards on the Stats page
-const HEADLINE_KEY = {
-  one_rep_max: 'topWeight',
-  max_consecutive: 'maxReps',
-  time_based: 'maxDuration'
-}
-
-/**
- * Latest, previous and best headline value of an exercise's aggregated chart data
- * @param {string} metricType - exercises.metric_type
- * @param {Array} data - output of one of the aggregate functions above
- * @returns {Object|null} { key, latest, previous, best, lastDate, sessions, last }
- */
-export function summarizeExercise(metricType, data) {
-  const key = HEADLINE_KEY[metricType]
-  if (!key || !data.length) return null
-
-  const withValue = data.filter(d => d[key] != null)
-  const last = withValue[withValue.length - 1] || null
-  const previous = withValue.length > 1 ? withValue[withValue.length - 2][key] : null
-
-  return {
-    key,
-    latest: last ? last[key] : null,
-    previous,
-    best: withValue.length ? Math.max(...withValue.map(d => d[key])) : null,
-    lastDate: data[data.length - 1].date,
-    sessions: data.length,
-    last
-  }
-}
-
 /**
  * Formats seconds as m:ss
  * @param {number} seconds
@@ -176,8 +137,7 @@ export function formatSeconds(seconds) {
 }
 
 /**
- * Adds a timestamp `t` to each point so charts can use a real time axis,
- * where a two-month gap looks like two months
+ * Adds a timestamp `t` to each point, for charts spaced by calendar date
  * @param {Array} data - points with a `date` (YYYY-MM-DD)
  * @returns {Array} same points with `t`
  */

@@ -1,7 +1,6 @@
 import { useId } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { withTime } from '../../utils/chartData'
-import { COLORS, xAxisProps, yAxisProps, gridProps, cursorProps, lineDot, activeDot, TooltipCard, EmptyChart } from './chartTheme'
+import { COLORS, xAxisProps, spacedData, yAxisProps, gridProps, cursorProps, lineDot, activeDot, TooltipCard, EmptyChart } from './chartTheme'
 
 function WeightTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
@@ -10,18 +9,18 @@ function WeightTooltip({ active, payload }) {
 }
 
 // data: body_weight_logs rows in any order
-export default function BodyWeightChart({ data, height = 220 }) {
+export default function BodyWeightChart({ data, height = 220, spacing }) {
   const gradientId = useId().replace(/:/g, '')
 
   if (!data || data.length === 0) return <EmptyChart>No body weight in this range</EmptyChart>
 
-  const chartData = withTime(data
+  const chartData = spacedData(data
     .map(log => ({ date: log.date, weight: parseFloat(log.weight) }))
-    .sort((a, b) => a.date.localeCompare(b.date)))
+    .sort((a, b) => a.date.localeCompare(b.date)), spacing)
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={chartData} margin={{ top: 8, right: 4, left: -8, bottom: 0 }}>
+      <AreaChart data={chartData} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={COLORS.primary} stopOpacity={0.28} />
@@ -29,7 +28,7 @@ export default function BodyWeightChart({ data, height = 220 }) {
           </linearGradient>
         </defs>
         <CartesianGrid {...gridProps} />
-        <XAxis {...xAxisProps} />
+        <XAxis {...xAxisProps(spacing)} />
         <YAxis {...yAxisProps} domain={['dataMin - 1', 'dataMax + 1']} tickFormatter={v => Math.round(v)} />
         <Tooltip content={<WeightTooltip />} cursor={cursorProps} />
         <Area

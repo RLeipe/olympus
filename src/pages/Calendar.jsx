@@ -65,7 +65,7 @@ export default function Calendar() {
     if (stravaMessage) window.history.replaceState(null, '', window.location.pathname)
   }, [stravaMessage])
 
-  const { days, weeks, visibleWeeks } = useMemo(() => {
+  const { days, weeks } = useMemo(() => {
     const sessions = plan.sessions.filter(s => s.date >= fetchFrom && s.date <= fetchTo)
     const actuals = buildActuals(training.workoutSets, training.activities)
     const { results, extras } = matchPlan(sessions, actuals, todayIso)
@@ -77,10 +77,9 @@ export default function Calendar() {
 
     return {
       days: byDay,
-      weeks: weekSummaries(weekStartsBetween(stripStart, todayIso), results, extras),
-      visibleWeeks: weekSummaries(weekStartsBetween(range.start, range.end), results, extras)
+      weeks: weekSummaries(weekStartsBetween(stripStart, todayIso), results, extras)
     }
-  }, [plan, training.workoutSets, training.activities, fetchFrom, fetchTo, todayIso, stripStart, range.start, range.end])
+  }, [plan, training.workoutSets, training.activities, fetchFrom, fetchTo, todayIso, stripStart])
 
   function changeView(next) {
     setView(next)
@@ -119,13 +118,10 @@ export default function Calendar() {
         <Banner tone="error">Failed to load data: {training.error}</Banner>
       )}
 
-      <div className="flex items-end justify-between gap-3">
-        <div className="min-w-0">
-          <div className="eyebrow mb-1">{currentUser.name} · {view === 'weeks' ? 'Two weeks' : 'Month'}</div>
-          <h1 className="title text-[1.35rem] md:text-4xl tracking-[0.04em] md:tracking-[0.08em] truncate">
-            {rangeTitle(view, anchor, range)}
-          </h1>
-        </div>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="title text-[1.35rem] md:text-4xl tracking-[0.04em] md:tracking-[0.08em] truncate min-w-0">
+          {rangeTitle(view, anchor, range)}
+        </h1>
         <div className="flex items-center gap-1 shrink-0">
           <button onClick={() => move(-1)} className="icon-btn" aria-label="Previous"><ChevronLeftIcon /></button>
           <button onClick={() => setAnchor(todayIso)} className="btn-secondary px-3.5">Today</button>
@@ -145,7 +141,6 @@ export default function Calendar() {
           <TwoWeeks
             range={range}
             days={days}
-            weeks={visibleWeeks}
             notes={training.notes}
             todayIso={todayIso}
             userId={currentUser.id}
@@ -188,44 +183,29 @@ export default function Calendar() {
   )
 }
 
-function TwoWeeks({ range, days, weeks, notes, todayIso, userId, onNoteSaved }) {
+// Two weeks of day cards, separated by a hairline; the dates are on the cards
+function TwoWeeks({ range, days, notes, todayIso, userId, onNoteSaved }) {
   const weekStarts = [range.start, addDays(range.start, 7)]
 
   return (
-    <div className="space-y-6">
-      {weekStarts.map(weekStart => {
-        const summary = weeks.find(w => w.start === weekStart)
-        return (
-          <section key={weekStart}>
-            <div className="flex items-center justify-between gap-3 mb-2.5 px-1">
-              <h2 className="eyebrow">
-                Week of {parseISODate(weekStart).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-              </h2>
-              {summary?.planned > 0 && (
-                <div className="flex items-center gap-2">
-                  <div className="w-16 h-1.5 rounded-full bg-sunken overflow-hidden">
-                    <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(1, summary.done / summary.planned) * 100}%` }} />
-                  </div>
-                  <span className="text-xs font-semibold text-ink-soft tabular-nums">{summary.done}/{summary.planned}</span>
-                </div>
-              )}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 items-start">
-              {dateRange(weekStart, addDays(weekStart, 6)).map(date => (
-                <DayCard
-                  key={date}
-                  date={date}
-                  day={days[date]}
-                  note={notes[date]}
-                  isToday={date === todayIso}
-                  userId={userId}
-                  onNoteSaved={onNoteSaved}
-                />
-              ))}
-            </div>
-          </section>
-        )
-      })}
+    <div className="space-y-5">
+      {weekStarts.map((weekStart, index) => (
+        <section key={weekStart} className={index > 0 ? 'pt-5 border-t border-line' : ''}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 items-start">
+            {dateRange(weekStart, addDays(weekStart, 6)).map(date => (
+              <DayCard
+                key={date}
+                date={date}
+                day={days[date]}
+                note={notes[date]}
+                isToday={date === todayIso}
+                userId={userId}
+                onNoteSaved={onNoteSaved}
+              />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }

@@ -1,37 +1,40 @@
-import { formatChartDate, formatTimeTick } from '../../utils/chartData'
+import { formatChartDate, formatTimeTick, withTime } from '../../utils/chartData'
 
-// Chart colors follow the CSS tokens, so charts switch with light/dark mode
+// Chart colors follow the CSS tokens in src/index.css
 export const COLORS = {
   primary: 'rgb(var(--accent-strong))',
   secondary: 'rgb(var(--extra))',
-  bar: 'rgb(var(--ink) / 0.08)',
+  bar: 'rgb(var(--ink-soft) / 0.32)',
   grid: 'rgb(var(--line))',
-  axis: 'rgb(var(--ink-faint))',
+  axis: 'rgb(var(--ink-soft))',
   surface: 'rgb(var(--surface))'
 }
 
-const tick = { fontSize: 11, fill: COLORS.axis, fontWeight: 500 }
+const tick = { fontSize: 12.5, fill: COLORS.axis, fontWeight: 500 }
 
-// Time axis over the `t` timestamps added by withTime()
-export const xAxisProps = {
-  dataKey: 't',
-  type: 'number',
-  scale: 'time',
-  domain: ['dataMin', 'dataMax'],
-  tickFormatter: formatTimeTick,
-  tick,
-  tickLine: false,
-  axisLine: false,
-  tickMargin: 8,
-  minTickGap: 28,
-  padding: { left: 10, right: 10 }
+// How the x axis spaces sessions: 'even' puts them side by side whatever the time
+// between them (a long break doesn't squeeze everything to the edges), 'calendar'
+// spaces them by date.
+export const SPACINGS = [['even', 'Even'], ['calendar', 'By date']]
+
+const axisBase = { tick, tickLine: false, axisLine: false, tickMargin: 8, minTickGap: 28 }
+
+export function xAxisProps(spacing = 'even') {
+  return spacing === 'calendar'
+    ? { ...axisBase, dataKey: 't', type: 'number', scale: 'time', domain: ['dataMin', 'dataMax'], tickFormatter: formatTimeTick, padding: { left: 10, right: 10 } }
+    : { ...axisBase, dataKey: 'date', tickFormatter: formatChartDate }
+}
+
+// Chart data for the spacing; calendar spacing needs a timestamp per point
+export function spacedData(data, spacing = 'even') {
+  return spacing === 'calendar' ? withTime(data) : data
 }
 
 export const yAxisProps = {
   tick,
   tickLine: false,
   axisLine: false,
-  width: 36
+  width: 40
 }
 
 export const gridProps = { stroke: COLORS.grid, strokeDasharray: '3 4', vertical: false }
