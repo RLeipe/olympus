@@ -51,7 +51,7 @@ not change anything by itself; it is read at the next planning session.
 
 | Page | What it does |
 | --- | --- |
-| **Stats** (`/`) | Summary tiles, body weight, and a card per exercise with its latest top set / max reps / longest hold and a trend line; tap a card for the full chart: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration) |
+| **Stats** (`/`) | Body weight, then a chart per exercise that has data, alphabetically: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration). Sessions are spaced evenly; 3M / 1Y / All range |
 | **Calendar** (`/calendar`) | 2-week and month views with plan vs. actual, day notes, weekly consistency, Strava connect/sync |
 | **Weight** (`/bodyweight`) | Log body weight |
 | **Log** (`/log`) | Log sets (sets × reps × kg, or duration), add exercises, write the session note, delete recent entries |

@@ -1,5 +1,5 @@
 import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { formatSeconds, withTime } from '../../utils/chartData'
+import { formatSeconds } from '../../utils/chartData'
 import { COLORS, xAxisProps, yAxisProps, gridProps, cursorProps, lineDot, activeDot, ChartLegend, TooltipCard, EmptyChart } from './chartTheme'
 
 function TimeTooltip({ active, payload }) {
@@ -26,8 +26,8 @@ export default function TimeBasedExerciseChart({ data }) {
         { label: 'Longest set', color: COLORS.primary },
         { label: 'Total time', color: COLORS.bar, kind: 'bar' }
       ]} />
-      <ResponsiveContainer width="100%" height={260}>
-        <ComposedChart data={withTime(data)} margin={{ top: 8, right: 4, left: -8, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={200}>
+        <ComposedChart data={data} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
           <CartesianGrid {...gridProps} />
           <XAxis {...xAxisProps} />
           <YAxis yAxisId="left" {...yAxisProps} tickFormatter={formatSeconds} />

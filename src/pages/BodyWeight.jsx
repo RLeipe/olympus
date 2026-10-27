@@ -111,7 +111,7 @@ export default function BodyWeight() {
 
   return (
     <div>
-      <PageHeader eyebrow={`${currentUser.name} · Body`} title="Weight" />
+      <PageHeader title="Weight" />
 
       <div className="grid md:grid-cols-5 gap-3 items-start">
         <div className="md:col-span-3 space-y-3">

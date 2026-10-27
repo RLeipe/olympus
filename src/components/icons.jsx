@@ -84,26 +84,6 @@ export const MoonIcon = props => (
   <Icon {...props}><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></Icon>
 )
 
-export const ClockIcon = props => (
-  <Icon {...props}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Icon>
-)
-
-export const CircleIcon = props => (
-  <Icon {...props}><circle cx="12" cy="12" r="7" /></Icon>
-)
-
-export const HalfCircleIcon = props => (
-  <Icon {...props}><circle cx="12" cy="12" r="7" /><path d="M12 5a7 7 0 0 1 0 14Z" fill="currentColor" /></Icon>
-)
-
-export const ArrowUpIcon = props => (
-  <Icon {...props}><path d="M12 19V5M6 11l6-6 6 6" /></Icon>
-)
-
-export const ArrowDownIcon = props => (
-  <Icon {...props}><path d="M12 5v14M6 13l6 6 6-6" /></Icon>
-)
-
 // The Olympus mark: two brass peaks on a slate tile
 export function Logo({ className = 'w-8 h-8' }) {
   return (

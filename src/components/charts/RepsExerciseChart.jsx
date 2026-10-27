@@ -1,5 +1,4 @@
 import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { withTime } from '../../utils/chartData'
 import { COLORS, xAxisProps, yAxisProps, gridProps, cursorProps, lineDot, activeDot, ChartLegend, TooltipCard, EmptyChart } from './chartTheme'
 
 function RepsTooltip({ active, payload }) {
@@ -26,8 +25,8 @@ export default function RepsExerciseChart({ data }) {
         { label: 'Max consecutive', color: COLORS.primary },
         { label: 'Total reps', color: COLORS.bar, kind: 'bar' }
       ]} />
-      <ResponsiveContainer width="100%" height={260}>
-        <ComposedChart data={withTime(data)} margin={{ top: 8, right: 4, left: -8, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={200}>
+        <ComposedChart data={data} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
           <CartesianGrid {...gridProps} />
           <XAxis {...xAxisProps} />
           <YAxis yAxisId="left" {...yAxisProps} allowDecimals={false} />

@@ -1,37 +1,34 @@
-import { formatChartDate, formatTimeTick } from '../../utils/chartData'
+import { formatChartDate } from '../../utils/chartData'
 
-// Chart colors follow the CSS tokens, so charts switch with light/dark mode
+// Chart colors follow the CSS tokens in src/index.css
 export const COLORS = {
   primary: 'rgb(var(--accent-strong))',
   secondary: 'rgb(var(--extra))',
-  bar: 'rgb(var(--ink) / 0.08)',
+  bar: 'rgb(var(--ink-soft) / 0.32)',
   grid: 'rgb(var(--line))',
-  axis: 'rgb(var(--ink-faint))',
+  axis: 'rgb(var(--ink-soft))',
   surface: 'rgb(var(--surface))'
 }
 
-const tick = { fontSize: 11, fill: COLORS.axis, fontWeight: 500 }
+const tick = { fontSize: 12.5, fill: COLORS.axis, fontWeight: 500 }
 
-// Time axis over the `t` timestamps added by withTime()
+// Sessions are spaced evenly, whatever the time between them, so a long break
+// doesn't squeeze everything else to the edges
 export const xAxisProps = {
-  dataKey: 't',
-  type: 'number',
-  scale: 'time',
-  domain: ['dataMin', 'dataMax'],
-  tickFormatter: formatTimeTick,
+  dataKey: 'date',
+  tickFormatter: formatChartDate,
   tick,
   tickLine: false,
   axisLine: false,
   tickMargin: 8,
-  minTickGap: 28,
-  padding: { left: 10, right: 10 }
+  minTickGap: 28
 }
 
 export const yAxisProps = {
   tick,
   tickLine: false,
   axisLine: false,
-  width: 36
+  width: 40
 }
 
 export const gridProps = { stroke: COLORS.grid, strokeDasharray: '3 4', vertical: false }

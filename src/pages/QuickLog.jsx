@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import RecentLogs from '../components/RecentLogs'
 import DayNoteEditor from '../components/DayNoteEditor'
-import { PageHeader, Loading, Banner, Stepper, Sheet } from '../components/ui'
+import { PageHeader, Loading, Banner, Stepper, Sheet, Select } from '../components/ui'
 import { PlusIcon, CheckIcon } from '../components/icons'
 import { toISODate } from '../utils/dates'
 
@@ -156,10 +156,7 @@ export default function QuickLog() {
   const isTime = metricType === 'time_based'
   const isWeighted = !metricType || metricType === 'one_rep_max'
 
-  // Recently logged exercises as one-tap shortcuts, and the last set of the selected one as a starting point
-  const recentExercises = [...new Map(recentLogs
-    .filter(set => set.exercises)
-    .map(set => [set.exercise_id, set.exercises.name])).entries()].slice(0, 6)
+  // The last set of the selected exercise is where the steppers start
   const lastSet = recentLogs.find(set => set.exercise_id === selectedExercise)
   const startReps = lastSet?.reps ?? (isTime ? DEFAULT_START.seconds : DEFAULT_START.reps)
   const startWeight = lastSet?.weight ?? DEFAULT_START.weight
@@ -174,27 +171,19 @@ export default function QuickLog() {
 
   return (
     <div className="max-w-xl mx-auto">
-      <PageHeader eyebrow={`${currentUser.name} · ${workoutDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })}`} title="Log" />
+      <PageHeader title="Log" />
 
       <form onSubmit={handleSubmit} className="card p-4 md:p-5">
         {/* Exercise Selection */}
         <label className="label" htmlFor="exercise">Exercise</label>
         <div className="flex gap-2">
-          <select
+          <Select
             id="exercise"
             value={selectedExercise}
-            onChange={(e) => setSelectedExercise(e.target.value)}
-            className="input flex-1 font-semibold appearance-none bg-[length:16px] bg-no-repeat bg-[right_1rem_center] pr-10"
-            style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238a8d93%27 stroke-width=%272.5%27 stroke-linecap=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E")' }}
-            required
-          >
-            <option value="">Choose an exercise…</option>
-            {exercises.map(ex => (
-              <option key={ex.id} value={ex.id}>
-                {ex.name}
-              </option>
-            ))}
-          </select>
+            onChange={setSelectedExercise}
+            options={exercises.map(ex => ({ value: ex.id, label: ex.name }))}
+            placeholder="Choose an exercise…"
+          />
           <button
             type="button"
             onClick={() => setShowNewExercise(true)}
@@ -205,22 +194,6 @@ export default function QuickLog() {
             <PlusIcon />
           </button>
         </div>
-
-        {recentExercises.length > 0 && (
-          <div className="flex gap-1.5 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap mt-2.5 pb-1 [scrollbar-width:none]">
-            {recentExercises.map(([id, name]) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setSelectedExercise(id)}
-                className={`h-8 px-3 rounded text-xs font-bold whitespace-nowrap transition
-                  ${selectedExercise === id ? 'bg-line text-ink' : 'bg-sunken text-ink-soft hover:text-ink'}`}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Dynamic Input Fields based on Exercise Type */}
         <div className="mt-4 divide-y divide-line/70 border-y border-line/70">

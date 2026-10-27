@@ -187,7 +187,7 @@ function StrengthDetails({ session, evaluation, matched }) {
               </span>
             </div>
             <div className="flex justify-between gap-2 text-ink-faint tabular-nums">
-              <span>plan {plannedExercise(ex.planned)}</span>
+              <span>{plannedExercise(ex.planned)}</span>
               <span className="text-right">{loggedSets(ex.logged, ex.planned.seconds !== undefined ? 'time_based' : null)}</span>
             </div>
           </li>

@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { MinusIcon, PlusIcon, XIcon } from './icons'
+import { useEffect, useRef, useState } from 'react'
+import { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, XIcon } from './icons'
 
 export function PageHeader({ eyebrow, title, children }) {
   return (
@@ -57,6 +57,64 @@ export function Segmented({ value, options, onChange, size = 'md' }) {
           {label}
         </button>
       ))}
+    </div>
+  )
+}
+
+// Dropdown in the app's style; a native <select> opens the phone's own picker.
+// options are { value, label }.
+export function Select({ id, value, options, onChange, placeholder }) {
+  const [open, setOpen] = useState(false)
+  const root = useRef(null)
+  const list = useRef(null)
+  const selected = options.find(option => option.value === value)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointer = e => { if (!root.current?.contains(e.target)) setOpen(false) }
+    const onKey = e => e.key === 'Escape' && setOpen(false)
+    document.addEventListener('pointerdown', onPointer)
+    document.addEventListener('keydown', onKey)
+    list.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' })
+    return () => {
+      document.removeEventListener('pointerdown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  return (
+    <div ref={root} className="relative flex-1 min-w-0">
+      <button
+        type="button"
+        id={id}
+        onClick={() => setOpen(!open)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="input flex items-center justify-between gap-2 text-left font-semibold"
+      >
+        <span className={`truncate ${selected ? '' : 'text-ink-faint font-normal'}`}>{selected?.label || placeholder}</span>
+        <ChevronDownIcon className={`w-4 h-4 shrink-0 text-ink-faint transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul ref={list} role="listbox" className="absolute z-30 inset-x-0 mt-1 max-h-72 overflow-y-auto card shadow-pop py-1">
+          {options.map(option => {
+            const active = option.value === value
+            return (
+              <li key={option.value} role="option" aria-selected={active}>
+                <button
+                  type="button"
+                  onClick={() => { onChange(option.value); setOpen(false) }}
+                  className={`w-full h-11 px-4 flex items-center justify-between gap-3 text-left transition
+                    ${active ? 'bg-sunken text-accent-strong font-semibold' : 'text-ink hover:bg-sunken'}`}
+                >
+                  <span className="truncate">{option.label}</span>
+                  {active && <CheckIcon className="w-4 h-4 shrink-0" />}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }
