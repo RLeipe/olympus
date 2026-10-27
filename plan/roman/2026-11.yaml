@@ -1,18 +1,19 @@
-# Block 1, weeks 1-4 (26 Oct - 22 Nov): focused days, varied running, week 4 easier
+# Block 1, weeks 1-4 (26 Oct - 22 Nov): focused days with A/B variants (A in weeks 1+3,
+# B in weeks 2+4), varied running, week 4 easier
 sessions:
   - date: 2026-11-01
     type: rest
 
-  # Week 2
+  # Week 2 (B)
   - date: 2026-11-02
     type: strength
     title: Back & posterior chain
     exercises:
-      - { name: Deadlifts, sets: 4, reps: 5, weight: 87.5 }
-      - { name: Good Mornings, sets: 3, reps: 10, weight: 35 }
+      - { name: Deadlifts, sets: 3, reps: 5, weight: 75 }
+      - { name: Hyperextensions, sets: 3, reps: 12 }
       - { name: Rows, sets: 4, reps: 8, weight: 47.5 }
       - { name: Pull Ups, sets: 5, reps: 5 }
-    notes: Pull-ups submaximal, stop with 1-2 reps left
+    notes: Deadlifts restart after the layoff, +2.5 kg a week. Hyperextensions bodyweight, hinge at the hips, stop before the lower back rounds. Pull-ups with chin-up grip (palms facing you), stop with 1-2 reps left
 
   - date: 2026-11-03
     type: run
@@ -29,12 +30,12 @@ sessions:
     type: strength
     title: Legs & core
     exercises:
-      - { name: Squats, sets: 4, reps: 5, weight: 72.5 }
-      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 62.5 }
-      - { name: Split Squats, sets: 3, reps: 8, weight: 22.5 }
-      - { name: Calf Raises, sets: 3, reps: 15, weight: 42.5 }
+      - { name: Squats, sets: 3, reps: 5, weight: 72.5 }
+      - { name: Lunges, sets: 3, reps: 8, weight: 20 }
+      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 65 }
+      - { name: Decline Situps, sets: 3, reps: 12 }
       - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Split squats 8 per leg
+    notes: Reverse lunges with the bar on your back, 8 per leg
 
   - date: 2026-11-05
     type: run
@@ -48,12 +49,12 @@ sessions:
     type: strength
     title: Upper body & posture
     exercises:
-      - { name: Overhead Press, sets: 4, reps: 7, weight: 32.5 }
+      - { name: Incline Bench Press, sets: 3, reps: 8, weight: 40 }
       - { name: Pull Ups, sets: 3, reps: max }
-      - { name: Dips, sets: 3, reps: 7 }
-      - { name: Curls, sets: 3, reps: 12, weight: 35 }
+      - { name: Preacher Curls, sets: 3, reps: 10, weight: 25 }
       - { name: Dead Hang, sets: 3, seconds: 40 }
       - { name: Plank, sets: 3, seconds: 50 }
+    notes: First time incline and preacher curls, the weights are a guess. Pick what leaves 2-3 reps in reserve and log it
 
   - date: 2026-11-07
     type: run
@@ -66,16 +67,16 @@ sessions:
   - date: 2026-11-08
     type: rest
 
-  # Week 3
+  # Week 3 (A)
   - date: 2026-11-09
     type: strength
     title: Back & posterior chain
     exercises:
-      - { name: Deadlifts, sets: 4, reps: 5, weight: 90 }
-      - { name: Good Mornings, sets: 3, reps: 10, weight: 37.5 }
+      - { name: Deadlifts, sets: 3, reps: 5, weight: 77.5 }
+      - { name: Good Mornings, sets: 3, reps: 10, weight: 35 }
       - { name: Rows, sets: 4, reps: 8, weight: 50 }
       - { name: Pull Ups, sets: 6, reps: 5 }
-    notes: Pull-ups submaximal, stop with 1-2 reps left
+    notes: Good mornings only as deep as your back stays flat, knees soft. Pull-ups submaximal, stop with 1-2 reps left
 
   - date: 2026-11-10
     type: run
@@ -88,12 +89,12 @@ sessions:
     type: strength
     title: Legs & core
     exercises:
-      - { name: Squats, sets: 4, reps: 5, weight: 75 }
-      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 65 }
-      - { name: Split Squats, sets: 3, reps: 8, weight: 25 }
-      - { name: Calf Raises, sets: 3, reps: 15, weight: 45 }
+      - { name: Squats, sets: 3, reps: 5, weight: 75 }
+      - { name: Bulgarian Split Squats, sets: 3, reps: 10 }
+      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 70 }
+      - { name: Sit Ups, sets: 3, reps: 30 }
       - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Split squats 8 per leg
+    notes: Split squats 10 per leg, bodyweight
 
   - date: 2026-11-12
     type: run
@@ -105,7 +106,7 @@ sessions:
     type: strength
     title: Upper body & posture
     exercises:
-      - { name: Overhead Press, sets: 4, reps: 8, weight: 32.5 }
+      - { name: Overhead Press, sets: 4, reps: 6, weight: 37.5 }
       - { name: Pull Ups, sets: 3, reps: max }
       - { name: Dips, sets: 3, reps: 8 }
       - { name: Curls, sets: 3, reps: 12, weight: 35 }
@@ -122,15 +123,16 @@ sessions:
   - date: 2026-11-15
     type: rest
 
-  # Week 4: easier, ends with a 5 km test
+  # Week 4 (B, easier): ends with a pull-up max test and a 5 km time trial
   - date: 2026-11-16
     type: strength
     title: Back & posterior chain (easy week)
     exercises:
-      - { name: Deadlifts, sets: 3, reps: 5, weight: 75 }
-      - { name: Good Mornings, sets: 2, reps: 10, weight: 30 }
-      - { name: Rows, sets: 3, reps: 8, weight: 40 }
+      - { name: Deadlifts, sets: 2, reps: 5, weight: 70 }
+      - { name: Hyperextensions, sets: 2, reps: 12 }
+      - { name: Rows, sets: 3, reps: 8, weight: 42.5 }
       - { name: Pull Ups, sets: 3, reps: 4 }
+    notes: Pull-ups with chin-up grip
 
   - date: 2026-11-17
     type: run
@@ -143,10 +145,10 @@ sessions:
     type: strength
     title: Legs & core (easy week)
     exercises:
-      - { name: Squats, sets: 3, reps: 5, weight: 65 }
-      - { name: Romanian Deadlifts, sets: 2, reps: 8, weight: 55 }
-      - { name: Split Squats, sets: 2, reps: 8, weight: 20 }
-      - { name: Calf Raises, sets: 2, reps: 15, weight: 40 }
+      - { name: Squats, sets: 2, reps: 5, weight: 65 }
+      - { name: Lunges, sets: 2, reps: 8, weight: 20 }
+      - { name: Hip Thrusts, sets: 2, reps: 10, weight: 60 }
+      - { name: Decline Situps, sets: 2, reps: 12 }
       - { name: Pull Ups, sets: 2, reps: 4 }
 
   - date: 2026-11-19
@@ -159,12 +161,11 @@ sessions:
     type: strength
     title: Upper body & posture (easy week)
     exercises:
-      - { name: Overhead Press, sets: 3, reps: 6, weight: 30 }
+      - { name: Incline Bench Press, sets: 2, reps: 8, weight: 40 }
       - { name: Pull Ups, sets: 1, reps: max }
-      - { name: Dips, sets: 2, reps: 6 }
-      - { name: Curls, sets: 2, reps: 10, weight: 35 }
+      - { name: Preacher Curls, sets: 2, reps: 10, weight: 25 }
       - { name: Dead Hang, sets: 2, seconds: 30 }
-    notes: Pull-ups is a single max set, a test of your best set after the block. Fresh, full range
+    notes: Pull-ups is a single max set, a test of your best set after the block. Do it first, fresh, full range
 
   - date: 2026-11-21
     type: run

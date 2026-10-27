@@ -1,4 +1,5 @@
-# Block 1, week 1 of 4 (26 Oct - 22 Nov): focused days, varied running, week 4 easier
+# Block 1, week 1 of 4 (26 Oct - 22 Nov): focused days with A/B variants (A in weeks 1+3,
+# B in weeks 2+4), varied running, week 4 easier
 sessions:
   - date: 2026-10-26
     type: strength
@@ -25,12 +26,12 @@ sessions:
     type: strength
     title: Legs & core
     exercises:
-      - { name: Squats, sets: 4, reps: 5, weight: 70 }
-      - { name: Romanian Deadlifts, sets: 3, reps: 8, weight: 60 }
-      - { name: Split Squats, sets: 3, reps: 8, weight: 20 }
-      - { name: Calf Raises, sets: 3, reps: 15, weight: 40 }
+      - { name: Squats, sets: 3, reps: 5, weight: 70 }
+      - { name: Bulgarian Split Squats, sets: 3, reps: 8 }
+      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 60 }
+      - { name: Sit Ups, sets: 3, reps: 30 }
       - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Split squats 8 per leg, rear foot on a bench or box if you have one. Pull-ups easy, between squat sets
+    notes: Split squats 8 per leg, rear foot on the bench, bodyweight. Hip thrusts with shoulders on the bench. Pull-ups easy, between squat sets
 
   - date: 2026-10-29
     type: run
@@ -43,7 +44,7 @@ sessions:
     type: strength
     title: Upper body & posture
     exercises:
-      - { name: Overhead Press, sets: 4, reps: 6, weight: 32.5 }
+      - { name: Overhead Press, sets: 4, reps: 6, weight: 35 }
       - { name: Pull Ups, sets: 3, reps: max }
       - { name: Dips, sets: 3, reps: 6 }
       - { name: Curls, sets: 3, reps: 10, weight: 35 }

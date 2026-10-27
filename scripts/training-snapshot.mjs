@@ -154,7 +154,7 @@ function describePlan(s) {
 
 function describeActual(a) {
   if (a.source === 'log') {
-    return `strength: ${a.exercises.map(e => `${e.name} ${e.sets.map(s => (e.metricType === 'time_based' ? `${s.reps}s` : s.reps)).join('/')}${e.sets[0].weight ? `@${e.sets[0].weight}` : ''}`).join(', ')}`
+    return `strength: ${a.exercises.map(e => `${e.name} ${describeSets(e)}`).join(', ')}`
   }
   const x = a.activity
   const km = x.distance_m / 1000
@@ -164,6 +164,19 @@ function describeActual(a) {
   if (x.elevation_m) parts.push(`+${Math.round(x.elevation_m)} m`)
   if (x.laps?.length > 1) parts.push(`laps ${x.laps.map(l => `${Math.round(l.distance_m)}m/${Math.round(l.elapsed_time_s ?? l.moving_time_s)}s@${formatPace(1000 / l.avg_speed)}`).join(' ')}`)
   return parts.join(', ')
+}
+
+// "5@40 5@60 5/5@85": sets sorted by weight (the logged order is not stored reliably,
+// set_number restarts with every logging batch) and grouped by weight
+function describeSets(e) {
+  const groups = []
+  for (const s of [...e.sets].sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0))) {
+    const reps = e.metricType === 'time_based' ? `${s.reps}s` : s.reps
+    const last = groups[groups.length - 1]
+    if (last && last.weight === s.weight) last.reps.push(reps)
+    else groups.push({ weight: s.weight, reps: [reps] })
+  }
+  return groups.map(g => `${g.reps.join('/')}${g.weight ? `@${g.weight}` : ''}`).join(' ')
 }
 
 function table(columns, rows) {
