@@ -32,10 +32,10 @@ sessions:
     exercises:
       - { name: Squats, sets: 3, reps: 5, weight: 72.5 }
       - { name: Lunges, sets: 3, reps: 8, weight: 20 }
-      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 65 }
+      - { name: Good Mornings, sets: 3, reps: 10, weight: 32.5 }
       - { name: Decline Situps, sets: 3, reps: 12 }
       - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Reverse lunges with the bar on your back, 8 per leg
+    notes: Reverse lunges with the bar on your back, 8 per leg. Good mornings only as deep as your back stays flat
 
   - date: 2026-11-05
     type: run
@@ -91,7 +91,7 @@ sessions:
     exercises:
       - { name: Squats, sets: 3, reps: 5, weight: 75 }
       - { name: Bulgarian Split Squats, sets: 3, reps: 10 }
-      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 70 }
+      - { name: Hyperextensions, sets: 3, reps: 15 }
       - { name: Sit Ups, sets: 3, reps: 30 }
       - { name: Pull Ups, sets: 3, reps: 4 }
     notes: Split squats 10 per leg, bodyweight
@@ -147,7 +147,7 @@ sessions:
     exercises:
       - { name: Squats, sets: 2, reps: 5, weight: 65 }
       - { name: Lunges, sets: 2, reps: 8, weight: 20 }
-      - { name: Hip Thrusts, sets: 2, reps: 10, weight: 60 }
+      - { name: Good Mornings, sets: 2, reps: 10, weight: 30 }
       - { name: Decline Situps, sets: 2, reps: 12 }
       - { name: Pull Ups, sets: 2, reps: 4 }
 

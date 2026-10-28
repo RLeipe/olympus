@@ -23,8 +23,8 @@ Read this at the start of every planning session. Keep it current and short.
 - Rotate exercises: no two consecutive weeks identical. Keep the main lift of each day
   (deadlift, squat, overhead press) and alternate the accessories.
 - Very tight hamstrings (forward fold barely reaches the knees): no Romanian deadlifts;
-  good mornings only as deep as the back stays flat; hyperextensions and hip thrusts for
-  the posterior chain instead.
+  good mornings only as deep as the back stays flat; hyperextensions for the posterior
+  chain instead. No hip thrusts: his plates are too small to get under the bar.
 - No calf work: calves are already his strongest part.
 - Running: prescribe by distance (sometimes elevation), kind easy / long / tempo /
   intervals. Easy runs by heart rate, just under 160. Pace only for tempo and intervals.

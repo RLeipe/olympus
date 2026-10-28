@@ -69,7 +69,8 @@ sessions:
 ```
 
 Several sessions on the same date are fine. Exercise names must match the names in the
-app (case-insensitive), otherwise logged sets cannot be matched to the plan.
+app, otherwise logged sets cannot be matched to the plan. Case, spaces/hyphens and a
+plural "s" are ignored ("Pull Ups" = "pull-up"), other differences are not.
 
 Validate before committing:
 

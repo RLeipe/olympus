@@ -28,10 +28,9 @@ sessions:
     exercises:
       - { name: Squats, sets: 3, reps: 5, weight: 70 }
       - { name: Bulgarian Split Squats, sets: 3, reps: 8 }
-      - { name: Hip Thrusts, sets: 3, reps: 10, weight: 60 }
       - { name: Sit Ups, sets: 3, reps: 30 }
       - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Split squats 8 per leg, rear foot on the bench, bodyweight. Hip thrusts with shoulders on the bench. Pull-ups easy, between squat sets
+    notes: Split squats 8 per leg, rear foot on the bench, bodyweight. Pull-ups easy, between squat sets
 
   - date: 2026-10-29
     type: run

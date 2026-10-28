@@ -167,8 +167,14 @@ function meetsTarget(set, planned) {
   return true
 }
 
-function normalizeName(name) {
-  return String(name).trim().toLowerCase()
+// "Pull Ups", "pull-up" and "Pullups" are the same exercise: ignore case, separators and
+// a plural "s" at the end of each word
+export function normalizeName(name) {
+  return String(name)
+    .toLowerCase()
+    .split(/[^a-z0-9äöüß]+/)
+    .map(word => word.replace(/s$/, ''))
+    .join('')
 }
 
 // Per-week counts for the given Monday week starts
