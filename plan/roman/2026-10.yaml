@@ -33,13 +33,17 @@ sessions:
     notes: Split squats 8 per leg, rear foot on the bench, bodyweight. Pull-ups easy, between squat sets
 
   - date: 2026-10-29
+    type: rest
+    notes: Travel day
+
+  - date: 2026-10-30
     type: run
     kind: easy
     distance_km: 9
     max_hr: 160
     notes: Finish with 6 x 20 s strides (quick and relaxed, full recovery)
 
-  - date: 2026-10-30
+  - date: 2026-10-31
     type: strength
     title: Upper body & posture
     exercises:
@@ -49,9 +53,3 @@ sessions:
       - { name: Curls, sets: 3, reps: 10, weight: 35 }
       - { name: Dead Hang, sets: 3, seconds: 30 }
       - { name: Plank, sets: 3, seconds: 45 }
-
-  - date: 2026-10-31
-    type: run
-    kind: long
-    distance_km: 14
-    max_hr: 160
