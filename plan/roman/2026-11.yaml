@@ -2,7 +2,10 @@
 # B in weeks 2+4), varied running, week 4 easier
 sessions:
   - date: 2026-11-01
-    type: rest
+    type: run
+    kind: long
+    distance_km: 14
+    max_hr: 160
 
   # Week 2 (B)
   - date: 2026-11-02
