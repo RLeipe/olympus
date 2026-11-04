@@ -30,6 +30,10 @@ sessions:
     notes: 2 km warm-up, 5 x 1 km with laps, rest cool-down
 
   - date: 2026-11-04
+    type: rest
+    notes: Travel day
+
+  - date: 2026-11-05
     type: strength
     title: Legs & core
     exercises:
@@ -40,7 +44,7 @@ sessions:
       - { name: Pull Ups, sets: 3, reps: 4 }
     notes: Reverse lunges with the bar on your back, 8 per leg. Good mornings only as deep as your back stays flat
 
-  - date: 2026-11-05
+  - date: 2026-11-06
     type: run
     kind: easy
     title: Exploration run
@@ -48,7 +52,7 @@ sessions:
     max_hr: 160
     notes: A route you have never run. No pace goal
 
-  - date: 2026-11-06
+  - date: 2026-11-07
     type: strength
     title: Upper body & posture
     exercises:
@@ -59,16 +63,13 @@ sessions:
       - { name: Plank, sets: 3, seconds: 50 }
     notes: First time incline and preacher curls, the weights are a guess. Pick what leaves 2-3 reps in reserve and log it
 
-  - date: 2026-11-07
+  - date: 2026-11-08
     type: run
     kind: long
     title: Hilly long run
     distance_km: 16
     elevation_m: 200
     notes: Trail or hills if you can, a first taste of Rennsteig. Easy effort; HR may go above 160 on climbs, walk steep bits
-
-  - date: 2026-11-08
-    type: rest
 
   # Week 3 (A)
   - date: 2026-11-09
