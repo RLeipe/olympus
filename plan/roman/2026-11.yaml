@@ -74,48 +74,50 @@ sessions:
   # Week 3 (A)
   - date: 2026-11-09
     type: strength
-    title: Back & posterior chain
+    title: "Travel workout: legs & posterior chain"
     exercises:
-      - { name: Deadlifts, sets: 3, reps: 5, weight: 77.5 }
-      - { name: Good Mornings, sets: 3, reps: 10, weight: 35 }
-      - { name: Rows, sets: 4, reps: 8, weight: 50 }
-      - { name: Pull Ups, sets: 6, reps: 5 }
-    notes: Good mornings only as deep as your back stays flat, knees soft. Pull-ups submaximal, stop with 1-2 reps left
+      - { name: Bulgarian Split Squats, sets: 3, reps: 12 }
+      - { name: Glute Bridges, sets: 3, reps: 12 }
+      - { name: Bodyweight Squats, sets: 3, reps: 20 }
+      - { name: Supermans, sets: 3, reps: 12 }
+      - { name: Plank, sets: 3, seconds: 60 }
+    notes: No equipment, about 30 min, 3 rounds as a circuit. Split squats 12 per leg, rear foot on a sofa or bed, 3 s down. Glute bridges single-leg, 12 per leg, 2 s squeeze at the top. Supermans hold 2 s at the top
 
   - date: 2026-11-10
     type: run
     kind: tempo
     distance_km: 9
     pace: "5:20"
-    notes: 2 km easy, 5 km at 5:20 (comfortably hard), 2 km easy
+    notes: 2 km easy, 5 km at 5:20 (comfortably hard), 2 km easy. Look for a flat stretch or a park loop
 
   - date: 2026-11-11
     type: strength
-    title: Legs & core
+    title: "Travel workout: upper body & posture"
     exercises:
-      - { name: Squats, sets: 3, reps: 5, weight: 75 }
-      - { name: Bulgarian Split Squats, sets: 3, reps: 10 }
-      - { name: Hyperextensions, sets: 3, reps: 15 }
+      - { name: Pushups, sets: 4, reps: 12 }
+      - { name: Pike Pushups, sets: 3, reps: 8 }
+      - { name: Reverse Snow Angels, sets: 3, reps: 12 }
       - { name: Sit Ups, sets: 3, reps: 30 }
-      - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Split squats 10 per leg, bodyweight
+      - { name: Plank, sets: 3, seconds: 60 }
+    notes: No equipment, about 30 min. Pushups add a few reps if 12 is easy. Pike pushups (hips high, head towards the floor) stand in for the overhead press. Reverse snow angels lying face down, arms just off the floor, slow
 
   - date: 2026-11-12
     type: run
     kind: easy
+    title: Exploration run
     distance_km: 10
     max_hr: 160
+    notes: Explore the city you're in
 
   - date: 2026-11-13
     type: strength
-    title: Upper body & posture
+    title: Back & press
     exercises:
-      - { name: Overhead Press, sets: 4, reps: 6, weight: 37.5 }
-      - { name: Pull Ups, sets: 3, reps: max }
-      - { name: Dips, sets: 3, reps: 8 }
-      - { name: Curls, sets: 3, reps: 12, weight: 35 }
-      - { name: Dead Hang, sets: 3, seconds: 45 }
-      - { name: Plank, sets: 3, seconds: 60 }
+      - { name: Deadlifts, sets: 3, reps: 5, weight: 77.5 }
+      - { name: Rows, sets: 4, reps: 8, weight: 50 }
+      - { name: Overhead Press, sets: 3, reps: 6, weight: 37.5 }
+      - { name: Pull Ups, sets: 5, reps: 5 }
+    notes: Back home, Monday's and Friday's main lifts combined. No good mornings to spare the hamstrings for Saturday's long run. Pull-ups superset with the rows
 
   - date: 2026-11-14
     type: run
