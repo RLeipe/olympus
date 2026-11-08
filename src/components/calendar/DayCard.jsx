@@ -16,26 +16,26 @@ import {
 const TYPE_ICON = { run: RunIcon, strength: DumbbellIcon, other: PulseIcon, rest: MoonIcon }
 
 // Everything for one day: planned sessions with their outcome, unplanned activities and the day note
-export default function DayCard({ date, day, note, isToday, userId, onNoteSaved, bare = false }) {
+export default function DayCard({ date, day, note, isToday, muted = false, userId, onNoteSaved }) {
   const [editing, setEditing] = useState(false)
   const results = day?.results || []
   const extras = day?.extras || []
   const isEmpty = results.length === 0 && extras.length === 0
   const dateObj = parseISODate(date)
-  const compact = isEmpty && !note && !editing && !bare
+  const compact = isEmpty && !note && !editing
 
   return (
-    <div className={bare ? '' : `card ${compact ? 'px-4 py-3' : 'p-3.5 md:p-4'} ${isToday ? 'ring-1 ring-accent/70 border-transparent' : ''}`}>
+    <div
+      id={`day-${date}`}
+      className={`card scroll-mt-20 ${compact ? 'px-4 py-3' : 'p-3.5 md:p-4'}
+        ${isToday ? 'ring-1 ring-accent/70 border-transparent' : ''} ${muted ? 'opacity-55' : ''}`}
+    >
       <div className={`flex items-center justify-between gap-2 ${compact ? '' : 'mb-3'}`}>
         <div className="flex items-baseline gap-2 whitespace-nowrap min-w-0">
-          {!bare && (
-            <>
-              <span className="num text-2xl font-semibold leading-none">{dateObj.getDate()}</span>
-              <span className="eyebrow">
-                {dateObj.toLocaleDateString('en-GB', { weekday: 'short' })} · {dateObj.toLocaleDateString('en-GB', { month: 'short' })}
-              </span>
-            </>
-          )}
+          <span className="num text-2xl font-semibold leading-none">{dateObj.getDate()}</span>
+          <span className="eyebrow">
+            {dateObj.toLocaleDateString('en-GB', { weekday: 'short' })} · {dateObj.toLocaleDateString('en-GB', { month: 'short' })}
+          </span>
           {isToday && <span className="chip text-accent-strong">Today</span>}
         </div>
         <div className="flex items-center gap-2">
@@ -48,7 +48,6 @@ export default function DayCard({ date, day, note, isToday, userId, onNoteSaved,
               title="Add note"
             >
               <NoteIcon className="w-4 h-4" />
-              {bare && 'Add note'}
             </button>
           )}
         </div>

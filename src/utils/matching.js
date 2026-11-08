@@ -177,17 +177,23 @@ export function normalizeName(name) {
     .join('')
 }
 
-// Per-week counts for the given Monday week starts
-export function weekSummaries(weekStarts, results, extras) {
+// Running km and strength sessions per week, done and planned.
+// sessions: plan sessions; actuals: from buildActuals
+export function weekVolumes(weekStarts, sessions, actuals) {
   return weekStarts.map(start => {
     const end = addDays(start, 6)
     const inWeek = date => date >= start && date <= end
-    const planned = results.filter(r => r.session.type !== 'rest' && inWeek(r.session.date))
+    const runMeters = actuals
+      .filter(a => a.type === 'run' && a.activity && inWeek(a.date))
+      .reduce((sum, a) => sum + (a.activity.distance_m || 0), 0)
     return {
       start,
-      planned: planned.length,
-      done: planned.filter(r => r.actual).length,
-      extras: extras.filter(a => inWeek(a.date)).length
+      runKm: runMeters / 1000,
+      plannedKm: sessions
+        .filter(s => s.type === 'run' && inWeek(s.date))
+        .reduce((sum, s) => sum + (s.distance_km || 0), 0),
+      strength: actuals.filter(a => a.type === 'strength' && inWeek(a.date)).length,
+      plannedStrength: sessions.filter(s => s.type === 'strength' && inWeek(s.date)).length
     }
   })
 }

@@ -16,8 +16,8 @@ occasional targets). The app has three jobs:
 2. **Hold the plan.** Planned sessions live as YAML files in [`plan/`](plan/README.md),
    one file per month. The plan is not edited in the app.
 3. **Compare plan and actual.** The Calendar shows each planned session with its outcome
-   (done, partial, missed, moved a day) plus unplanned activities, and a weekly
-   consistency strip.
+   (done, partial, missed, moved a day) plus unplanned activities, and running km and
+   strength sessions per week.
 
 ### How planning works
 
@@ -52,7 +52,7 @@ not change anything by itself; it is read at the next planning session.
 | Page | What it does |
 | --- | --- |
 | **Stats** (`/`) | Body weight, then a chart per exercise that has data, alphabetically: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration). 3M / 1Y / All range; sessions spaced evenly or by date |
-| **Calendar** (`/calendar`) | 2-week and month views with plan vs. actual, day notes, weekly consistency, Strava connect/sync |
+| **Calendar** (`/calendar`) | A month of day cards (whole weeks) with plan vs. actual and day notes; running km and strength sessions per week for the last 8 weeks; Strava connect/sync |
 | **Weight** (`/bodyweight`) | Log body weight |
 | **Log** (`/log`) | Log sets (sets × reps × kg, or duration), add exercises, write the session note, delete recent entries |
 
@@ -95,7 +95,7 @@ Schema changes go in `supabase/migrations/` and are run by hand in the Supabase 
 - `src/index.css`, `tailwind.config.js`: design tokens (colors, fonts, corner radii)
 - `src/components/ui.jsx`, `icons.jsx`: shared UI pieces (stepper, sheet, segmented control, ...) and icons
 - `src/components/charts/`: exercise and body weight charts with a shared theme
-- `src/components/calendar/`: day cards, month grid, consistency strip, Strava bar
+- `src/components/calendar/`: day cards, weekly volume strip, Strava bar
 - `src/utils/planCore.js`: plan parsing and validation
 - `src/utils/matching.js`: plan vs. actual matching (shared by the app and the scripts)
 - `src/utils/dates.js`: local-date helpers (never use `toISOString()` for dates)
