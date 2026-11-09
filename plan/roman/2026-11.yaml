@@ -73,15 +73,8 @@ sessions:
 
   # Week 3 (A)
   - date: 2026-11-09
-    type: strength
-    title: "Travel workout: legs & posterior chain"
-    exercises:
-      - { name: Bulgarian Split Squats, sets: 3, reps: 12 }
-      - { name: Glute Bridges, sets: 3, reps: 12 }
-      - { name: Bodyweight Squats, sets: 3, reps: 20 }
-      - { name: Supermans, sets: 3, reps: 12 }
-      - { name: Plank, sets: 3, seconds: 60 }
-    notes: No equipment, about 30 min, 3 rounds as a circuit. Split squats 12 per leg, rear foot on a sofa or bed, 3 s down. Glute bridges single-leg, 12 per leg, 2 s squeeze at the top. Supermans hold 2 s at the top
+    type: rest
+    notes: Swapped with Sunday
 
   - date: 2026-11-10
     type: run
@@ -92,14 +85,12 @@ sessions:
 
   - date: 2026-11-11
     type: strength
-    title: "Travel workout: upper body & posture"
+    title: Travel workout
     exercises:
       - { name: Pushups, sets: 4, reps: 12 }
-      - { name: Pike Pushups, sets: 3, reps: 8 }
-      - { name: Reverse Snow Angels, sets: 3, reps: 12 }
-      - { name: Sit Ups, sets: 3, reps: 30 }
+      - { name: Bulgarian Split Squats, sets: 3, reps: 12 }
       - { name: Plank, sets: 3, seconds: 60 }
-    notes: No equipment, about 30 min. Pushups add a few reps if 12 is easy. Pike pushups (hips high, head towards the floor) stand in for the overhead press. Reverse snow angels lying face down, arms just off the floor, slow
+    notes: No equipment, about 20 min, as a circuit. Pushups add a few reps if 12 is easy. Split squats 12 per leg, rear foot on a sofa or bed
 
   - date: 2026-11-12
     type: run
@@ -127,7 +118,14 @@ sessions:
     notes: Last 2 km a bit quicker (around 5:45) if you feel good
 
   - date: 2026-11-15
-    type: rest
+    type: strength
+    title: Legs & core
+    exercises:
+      - { name: Squats, sets: 3, reps: 5, weight: 75 }
+      - { name: Lunges, sets: 3, reps: 8, weight: 20 }
+      - { name: Sit Ups, sets: 3, reps: 30 }
+      - { name: Pull Ups, sets: 3, reps: 4 }
+    notes: Swapped with Monday's rest day. Lunges 8 per leg. Day after the long run, so stop a set early if the legs feel heavy
 
   # Week 4 (B, easier): ends with a pull-up max test and a 5 km time trial
   - date: 2026-11-16
