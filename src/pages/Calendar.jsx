@@ -3,17 +3,15 @@ import { useUser } from '../contexts/UserContext'
 import { useTrainingData } from '../hooks/useTrainingData'
 import { useStrava } from '../hooks/useStrava'
 import { getPlan } from '../utils/plan'
-import { buildActuals, matchPlan, weekSummaries, weekStartsBetween } from '../utils/matching'
+import { buildActuals, matchPlan, weekVolumes, weekStartsBetween } from '../utils/matching'
 import { addDays, addMonths, dateRange, parseISODate, startOfMonth, startOfWeek, today } from '../utils/dates'
 import DayCard from '../components/calendar/DayCard'
-import MonthGrid from '../components/calendar/MonthGrid'
 import WeekStrip from '../components/calendar/WeekStrip'
 import StravaBar from '../components/calendar/StravaBar'
-import { Banner, Loading, Segmented, Sheet } from '../components/ui'
+import { Banner, Loading } from '../components/ui'
 import { ChevronLeftIcon, ChevronRightIcon } from '../components/icons'
 
 const STRIP_WEEKS = 8
-const VIEW_KEY = 'olympus.calendarView'
 
 const STRAVA_MESSAGES = {
   connected: { text: 'Strava connected. Syncing your activities...', tone: 'success' },
@@ -21,37 +19,22 @@ const STRAVA_MESSAGES = {
   'missing-scope': { text: 'Strava needs permission to read your activities. Please connect again and keep the activity checkbox ticked.', tone: 'warn' }
 }
 
-function readView() {
-  try { return localStorage.getItem(VIEW_KEY) || 'weeks' } catch { return 'weeks' }
-}
-
-function visibleRange(view, anchor) {
-  if (view === 'weeks') {
-    const start = startOfWeek(anchor)
-    return { start, end: addDays(start, 13) }
-  }
+// Whole weeks (Monday to Sunday) covering the month of `anchor`
+function monthRange(anchor) {
   const monthStart = startOfMonth(anchor)
   const lastOfMonth = addDays(addMonths(monthStart, 1), -1)
   return { start: startOfWeek(monthStart), end: addDays(startOfWeek(lastOfMonth), 6) }
 }
 
-function rangeTitle(view, anchor, range) {
-  if (view === 'month') {
-    return parseISODate(startOfMonth(anchor)).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
-  }
-  const fmt = iso => parseISODate(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
-  return `${fmt(range.start)} – ${fmt(range.end)}`
-}
-
 export default function Calendar() {
   const { currentUser } = useUser()
   const todayIso = today()
-  const [view, setView] = useState(readView)
   const [anchor, setAnchor] = useState(todayIso)
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [jumpToToday, setJumpToToday] = useState(0)
   const [stravaMessage, setStravaMessage] = useState(() => new URLSearchParams(window.location.search).get('strava'))
 
-  const range = visibleRange(view, anchor)
+  const range = monthRange(anchor)
+  const month = anchor.slice(0, 7)
   const stripStart = addDays(startOfWeek(todayIso), -7 * (STRIP_WEEKS - 1))
   // One extra day on each side so sessions done a day early or late still match
   const fetchFrom = addDays(range.start < stripStart ? range.start : stripStart, -1)
@@ -65,6 +48,11 @@ export default function Calendar() {
     if (stravaMessage) window.history.replaceState(null, '', window.location.pathname)
   }, [stravaMessage])
 
+  // After "Today", scroll to today's card once it is rendered
+  useEffect(() => {
+    if (jumpToToday) document.getElementById(`day-${todayIso}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [jumpToToday, todayIso])
+
   const { days, weeks } = useMemo(() => {
     const sessions = plan.sessions.filter(s => s.date >= fetchFrom && s.date <= fetchTo)
     const actuals = buildActuals(training.workoutSets, training.activities)
@@ -77,17 +65,13 @@ export default function Calendar() {
 
     return {
       days: byDay,
-      weeks: weekSummaries(weekStartsBetween(stripStart, todayIso), results, extras)
+      weeks: weekVolumes(weekStartsBetween(stripStart, todayIso), plan.sessions, actuals)
     }
   }, [plan, training.workoutSets, training.activities, fetchFrom, fetchTo, todayIso, stripStart])
 
-  function changeView(next) {
-    setView(next)
-    try { localStorage.setItem(VIEW_KEY, next) } catch { /* private mode */ }
-  }
-
-  function move(direction) {
-    setAnchor(view === 'weeks' ? addDays(anchor, 7 * direction) : addMonths(anchor, direction))
+  function goToToday() {
+    setAnchor(todayIso)
+    setJumpToToday(n => n + 1)
   }
 
   if (!currentUser) return <Loading />
@@ -120,41 +104,29 @@ export default function Calendar() {
 
       <div className="flex items-center justify-between gap-3">
         <h1 className="title text-[1.35rem] md:text-4xl tracking-[0.04em] md:tracking-[0.08em] truncate min-w-0">
-          {rangeTitle(view, anchor, range)}
+          {parseISODate(startOfMonth(anchor)).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
         </h1>
         <div className="flex items-center gap-1 shrink-0">
-          <button onClick={() => move(-1)} className="icon-btn" aria-label="Previous"><ChevronLeftIcon /></button>
-          <button onClick={() => setAnchor(todayIso)} className="btn-secondary px-3.5">Today</button>
-          <button onClick={() => move(1)} className="icon-btn" aria-label="Next"><ChevronRightIcon /></button>
+          <button onClick={() => setAnchor(addMonths(anchor, -1))} className="icon-btn" aria-label="Previous month"><ChevronLeftIcon /></button>
+          <button onClick={goToToday} className="btn-secondary px-3.5">Today</button>
+          <button onClick={() => setAnchor(addMonths(anchor, 1))} className="icon-btn" aria-label="Next month"><ChevronRightIcon /></button>
         </div>
       </div>
 
-      <WeekStrip weeks={weeks} hasPlan={hasPlan} />
+      <WeekStrip weeks={weeks} />
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <Segmented value={view} onChange={changeView} options={[['weeks', '2 weeks'], ['month', 'Month']]} />
-        <StravaBar strava={strava} />
-      </div>
+      <StravaBar strava={strava} />
 
       <div className={training.loading ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
-        {view === 'weeks' ? (
-          <TwoWeeks
-            range={range}
-            days={days}
-            notes={training.notes}
-            todayIso={todayIso}
-            userId={currentUser.id}
-            onNoteSaved={training.setNote}
-          />
-        ) : (
-          <MonthGrid
-            monthStart={startOfMonth(anchor)}
-            days={days}
-            notes={training.notes}
-            todayIso={todayIso}
-            onSelect={setSelectedDate}
-          />
-        )}
+        <Weeks
+          range={range}
+          month={month}
+          days={days}
+          notes={training.notes}
+          todayIso={todayIso}
+          userId={currentUser.id}
+          onNoteSaved={training.setNote}
+        />
       </div>
 
       {!hasPlan && (
@@ -163,35 +135,20 @@ export default function Calendar() {
         </p>
       )}
 
-      {selectedDate && (
-        <Sheet
-          title={parseISODate(selectedDate).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
-          onClose={() => setSelectedDate(null)}
-        >
-          <DayCard
-            bare
-            date={selectedDate}
-            day={days[selectedDate]}
-            note={training.notes[selectedDate]}
-            isToday={selectedDate === todayIso}
-            userId={currentUser.id}
-            onNoteSaved={training.setNote}
-          />
-        </Sheet>
-      )}
     </div>
   )
 }
 
-// Two weeks of day cards, separated by a hairline; the dates are on the cards
-function TwoWeeks({ range, days, notes, todayIso, userId, onNoteSaved }) {
-  const weekStarts = [range.start, addDays(range.start, 7)]
+// The month's weeks as rows of day cards, separated by hairlines; cards in a row share a
+// height. Days of the neighbouring months that complete the first and last week are dimmed.
+function Weeks({ range, month, days, notes, todayIso, userId, onNoteSaved }) {
+  const weekStarts = weekStartsBetween(range.start, range.end)
 
   return (
     <div className="space-y-5">
       {weekStarts.map((weekStart, index) => (
         <section key={weekStart} className={index > 0 ? 'pt-5 border-t border-line' : ''}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {dateRange(weekStart, addDays(weekStart, 6)).map(date => (
               <DayCard
                 key={date}
@@ -199,6 +156,7 @@ function TwoWeeks({ range, days, notes, todayIso, userId, onNoteSaved }) {
                 day={days[date]}
                 note={notes[date]}
                 isToday={date === todayIso}
+                muted={!date.startsWith(month)}
                 userId={userId}
                 onNoteSaved={onNoteSaved}
               />
