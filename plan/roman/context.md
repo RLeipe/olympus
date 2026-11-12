@@ -15,8 +15,9 @@ Read this at the start of every planning session. Keep it current and short.
 - Home gym: rack with pull-up bar and dip handles, barbell, SZ bar, adjustable bench
   (incline/decline, hyperextension and preacher curl attachments). No dumbbells, no cables.
 - Business travel sometimes: plan a shorter, lighter hotel-room session (bodyweight, no
-  equipment) only when Roman asks for it. Template: 9 + 11 Nov 2026 (legs & posterior
-  chain / upper body & posture, ~30 min); runs work as usual while travelling.
+  equipment) only when Roman asks for it. Keep it short (~20 min) with few
+  exercises, only ones already in the app (e.g. 11 Nov 2026: pushups, Bulgarian split
+  squats, plank). Runs work as usual while travelling.
 - Strength: exact kg in 2.5 kg steps, no %1RM programming. Likes focused days (back day,
   leg day, upper day) over full-body, but not dogmatically. Pull-ups in every session
   where they fit (likes them, good for the shoulders).
