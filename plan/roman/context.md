@@ -34,6 +34,10 @@ Read this at the start of every planning session. Keep it current and short.
   tempo, time trials), new routes, trails.
 - Intervals: wants to actually do them; records them with laps on the Garmin.
 
+## Current injuries
+- 12 Nov 2026: bad ankle sprain (cobblestones, on a run) and a deep cut in the hand.
+  No training 13-15 Nov; return plan from 16 Nov depends on how both heal.
+
 ## Principles
 - Week: Mon back & posterior chain, Tue hard run, Wed legs & core, Thu easy run,
   Fri upper body & posture (no leg work), Sat long run, Sun rest.
