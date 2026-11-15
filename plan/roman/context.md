@@ -39,9 +39,10 @@ Read this at the start of every planning session. Keep it current and short.
 
 ## Current injuries
 - Grade 2 ankle sprain on 12 Nov 2026 (big oedema). Probably no running for the rest of
-  2026. Nothing that loads or angles the ankle: no standing loaded lifts, no bodyweight leg
-  exercises, no plank yet, no feet hooked under anything (decline sit-ups,
-  hyperextensions); step down from the pull-up bar, never jump.
+  2026. Nothing that loads or angles the ankle: no bodyweight leg exercises, no plank yet,
+  no standing rows, curls only seated (preacher) for now. Fine: standing overhead press
+  (load straight from above), sit-ups with the feet hooked (the hook sits on the lower
+  leg). Step down from the pull-up bar, never jump.
 - Deep cut in the hand (12 Nov), closed on 15 Nov but still inflamed: grip work only when
   it doesn't hurt.
 
@@ -62,6 +63,7 @@ Read this at the start of every planning session. Keep it current and short.
 - Pull-up max and 5 km tests postponed. Last numbers before the injury: deadlift
   3x5 @ 75, squat 3x5 @ 72.5, rows 4x8 @ 47.5, incline bench 2x8 @ 45, pull-ups 6/7/8,
   tempo 5 km @ 4:59 (10 Nov, faster than the 5:20 target).
-- 16-30 Nov: no training until 21 Nov (travel 19-20), then upper body only (seated, lying,
-  hanging), A/B alternating every other day with meditation days in between. Plan December
-  once the ankle allows more; restart running in January for Rennsteig.
+- 16-30 Nov: no training until 21 Nov (travel 19-20), then upper body only (nothing
+  that loads the ankle from the side), A/B alternating every other day with meditation
+  days in between. Plan December once the ankle allows more; restart running in January
+  for Rennsteig.
