@@ -8,6 +8,9 @@ Read this at the start of every planning session. Keep it current and short.
 - Next race: Rennsteiglauf marathon, May 2027 (hilly, partly trail). No other race planned.
 - Strength: fix the weak posterior chain and posture ("shrimp posture"); 10 strict
   pull-ups in one set.
+- Get back into meditation, without pressure: plan meditation days (type meditation, no
+  length or instructions) on days without training; he logs meditations in the app.
+  Never track or push it like the workouts.
 
 ## Constraints and preferences
 - 5-6 sessions per week, roughly half strength, half running. Trains in the morning
@@ -35,8 +38,12 @@ Read this at the start of every planning session. Keep it current and short.
 - Intervals: wants to actually do them; records them with laps on the Garmin.
 
 ## Current injuries
-- 12 Nov 2026: bad ankle sprain (cobblestones, on a run) and a deep cut in the hand.
-  No training 13-15 Nov; return plan from 16 Nov depends on how both heal.
+- Grade 2 ankle sprain on 12 Nov 2026 (big oedema). Probably no running for the rest of
+  2026. Nothing that loads or angles the ankle: no standing loaded lifts, no bodyweight leg
+  exercises, no plank yet, no feet hooked under anything (decline sit-ups,
+  hyperextensions); step down from the pull-up bar, never jump.
+- Deep cut in the hand (12 Nov), closed on 15 Nov but still inflamed: grip work only when
+  it doesn't hurt.
 
 ## Principles
 - Week: Mon back & posterior chain, Tue hard run, Wed legs & core, Thu easy run,
@@ -49,6 +56,12 @@ Read this at the start of every planning session. Keep it current and short.
 
 ## Recent decisions
 - 2026-10: Berlin Marathon 27 Sep (4:34:35), Leipzig half 11 Oct (1:55:45).
-- Block 1 (26 Oct - 22 Nov): about 30-35 km/week, 5 km time trial on 21 Nov,
-  pull-up max test on 20 Nov. A/B variants per strength day (A weeks 1+3, B weeks 2+4).
+- Block 1 (26 Oct - 12 Nov): about 30-35 km/week, A/B variants per strength day
+  (A weeks 1+3, B weeks 2+4). Every planned session done until the injury.
 - 26 Oct: 85 kg deadlifts too heavy after the layoff (2 of 4 sets); restarted at 3x5 @ 75.
+- Pull-up max and 5 km tests postponed. Last numbers before the injury: deadlift
+  3x5 @ 75, squat 3x5 @ 72.5, rows 4x8 @ 47.5, incline bench 2x8 @ 45, pull-ups 6/7/8,
+  tempo 5 km @ 4:59 (10 Nov, faster than the 5:20 target).
+- 16-30 Nov: no training until 21 Nov (travel 19-20), then upper body only (seated, lying,
+  hanging), A/B alternating every other day with meditation days in between. Plan December
+  once the ankle allows more; restart running in January for Rennsteig.
