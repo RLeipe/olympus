@@ -52,9 +52,10 @@ not change anything by itself; it is read at the next planning session.
 | Page | What it does |
 | --- | --- |
 | **Stats** (`/`) | Body weight, then a chart per exercise that has data, alphabetically: weighted (1RM/5RM + volume), reps (max + total), time-based (max + total duration). 3M / 1Y / All range; sessions spaced evenly or by date |
-| **Calendar** (`/calendar`) | A month of day cards (whole weeks) with plan vs. actual and day notes; running km and strength sessions per week for the last 8 weeks; Strava connect/sync |
+| **Calendar** (`/calendar`) | A month of day cards (whole weeks) with plan vs. actual, meditations and day notes; running km and strength sessions per week for the last 8 weeks; Strava connect/sync |
 | **Weight** (`/bodyweight`) | Log body weight |
 | **Log** (`/log`) | Log sets (sets × reps × kg, or duration), add exercises, write the session note, delete recent entries |
+| **Meditation** (`/meditation`) | Log meditations (date, minutes in 5-minute steps, notes); total of the last 30 days and history |
 
 The user switcher in the header defaults to Roman. On phones the pages are in a bottom tab bar. The design ("Slate & Brass") is dark only: slate greys, muted brass, Roman-capital titles and serif numbers.
 
@@ -83,6 +84,7 @@ The user switcher in the header defaults to Roman. On phones the pages are in a 
 | `workout_sets` | One row per logged set |
 | `body_weight_logs` | One weight per user per day |
 | `day_notes` | One free-text note per user per day |
+| `meditations` | Date, minutes (multiple of 5) and notes; several per day allowed |
 | `activities` | Strava activities with HR, elevation and laps |
 | `strava_connections` | Strava tokens (RLS-protected) |
 
@@ -116,7 +118,7 @@ bypasses all database security and must only ever be stored in Cloudflare.
 
 ### Setting up from scratch
 
-1. Supabase: create a project, run `supabase/migrations/001_initial_schema.sql`, then `002_plan_notes_strava.sql`.
+1. Supabase: create a project, run `supabase/migrations/001_initial_schema.sql`, then `002_plan_notes_strava.sql` and `003_meditations.sql`.
 2. Cloudflare Pages: connect the GitHub repo with framework preset "React (Vite)", build
    command `npm run build`, output directory `dist`, and set the variables above.
 3. Strava: create an API app at strava.com/settings/api with the callback domain above,

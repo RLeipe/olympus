@@ -55,7 +55,7 @@ export default function Calendar() {
 
   const { days, weeks } = useMemo(() => {
     const sessions = plan.sessions.filter(s => s.date >= fetchFrom && s.date <= fetchTo)
-    const actuals = buildActuals(training.workoutSets, training.activities)
+    const actuals = buildActuals(training.workoutSets, training.activities, training.meditations)
     const { results, extras } = matchPlan(sessions, actuals, todayIso)
 
     const byDay = {}
@@ -67,7 +67,7 @@ export default function Calendar() {
       days: byDay,
       weeks: weekVolumes(weekStartsBetween(stripStart, todayIso), plan.sessions, actuals)
     }
-  }, [plan, training.workoutSets, training.activities, fetchFrom, fetchTo, todayIso, stripStart])
+  }, [plan, training.workoutSets, training.activities, training.meditations, fetchFrom, fetchTo, todayIso, stripStart])
 
   function goToToday() {
     setAnchor(todayIso)

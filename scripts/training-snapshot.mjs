@@ -67,6 +67,7 @@ const allActivities = await restOrEmpty(
   `activities?select=strava_id,activity_date,sport_type,name,distance_m,moving_time_s,elevation_m,avg_hr,max_hr,avg_speed,laps` +
   `&user_id=eq.${user.id}&activity_date=gte.${[runsSince, addDays(from, -1)].sort()[0]}&order=start_time`)
 const notes = await restOrEmpty(`day_notes?select=date,note&user_id=eq.${user.id}&date=gte.${from}&order=date`)
+const meditations = await restOrEmpty(`meditations?select=date,minutes,notes&user_id=eq.${user.id}&date=gte.${addDays(from, -1)}&order=date`)
 
 const toNumber = v => (v == null ? null : Number(v))
 for (const a of allActivities) {
@@ -84,7 +85,7 @@ const parsed = existsSync(planDir)
   : []
 const plan = mergePlans(parsed)
 const sessions = plan.sessions.filter(s => s.date >= addDays(from, -1) && s.date <= planUntil)
-const { results, extras } = matchPlan(sessions, buildActuals(sets, activities), todayIso)
+const { results, extras } = matchPlan(sessions, buildActuals(sets, activities, meditations), todayIso)
 
 const out = []
 out.push(`# Training snapshot: ${user.name}, ${from} to ${todayIso}\n`)
@@ -153,6 +154,10 @@ function describePlan(s) {
 }
 
 function describeActual(a) {
+  if (a.type === 'meditation') {
+    const notes = a.entries.map(e => e.notes).filter(Boolean).join(' / ')
+    return `meditation ${a.minutes} min${notes ? ` (${notes.replace(/\n/g, ' ')})` : ''}`
+  }
   if (a.source === 'log') {
     return `strength: ${a.exercises.map(e => `${e.name} ${describeSets(e)}`).join(', ')}`
   }

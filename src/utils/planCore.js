@@ -2,7 +2,7 @@
 // The file format is documented in plan/README.md.
 import yaml from 'js-yaml'
 
-export const SESSION_TYPES = ['run', 'strength', 'other', 'rest']
+export const SESSION_TYPES = ['run', 'strength', 'other', 'rest', 'meditation']
 export const RUN_KINDS = ['easy', 'long', 'tempo', 'intervals', 'recovery', 'race']
 
 const SESSION_KEYS = {
@@ -10,7 +10,9 @@ const SESSION_KEYS = {
   run: ['kind', 'distance_km', 'elevation_m', 'max_hr', 'pace', 'intervals'],
   strength: ['exercises'],
   other: ['duration_min'],
-  rest: []
+  rest: [],
+  // No duration or instructions on purpose: a meditation day is an invitation, not a target
+  meditation: []
 }
 const EXERCISE_KEYS = ['name', 'sets', 'reps', 'weight', 'seconds', 'notes']
 const INTERVAL_KEYS = ['reps', 'distance_m', 'duration_s', 'pace', 'recovery']

@@ -14,13 +14,13 @@ async function fetchAll(buildQuery) {
   }
 }
 
-function isMissingTable(error) {
+export function isMissingTable(error) {
   return error?.code === '42P01' || error?.code === 'PGRST205'
 }
 
-// Logged sets, Strava activities and day notes for one user between two dates (inclusive)
+// Logged sets, Strava activities, meditations and day notes for one user between two dates (inclusive)
 export function useTrainingData(userId, fromIso, toIso) {
-  const [data, setData] = useState({ workoutSets: [], activities: [], notes: {} })
+  const [data, setData] = useState({ workoutSets: [], activities: [], meditations: [], notes: {} })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [needsMigration, setNeedsMigration] = useState(false)
@@ -61,10 +61,25 @@ export function useTrainingData(userId, fromIso, toIso) {
         missing = true
       }
 
+      // The meditations table comes from a later migration; the calendar works without it
+      let meditations = []
+      try {
+        meditations = await fetchAll(() => supabase
+          .from('meditations')
+          .select('id, date, minutes, notes')
+          .eq('user_id', userId)
+          .gte('date', fromIso)
+          .lte('date', toIso)
+          .order('date'))
+      } catch (err) {
+        if (!isMissingTable(err)) throw err
+      }
+
       setNeedsMigration(missing)
       setData({
         workoutSets,
         activities,
+        meditations,
         notes: Object.fromEntries(noteRows.map(n => [n.date, n.note]))
       })
     } catch (err) {
