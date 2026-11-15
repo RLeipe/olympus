@@ -112,56 +112,92 @@ sessions:
     type: rest
     notes: Recovery from the ankle sprain and hand cut (12 Nov)
 
-  # Week 4 (B, easier): ends with a pull-up max test and a 5 km time trial
+  # Ankle sprain (grade 2, 12 Nov) and hand cut: no training until Sat 21 Nov, then upper body
+  # only, seated / lying / hanging, alternating A (press & pull) and B (back & posture).
+  # Meditation on the other days, no length or target. Tests and running postponed.
   - date: 2026-11-16
-    type: strength
-    title: Back & posterior chain (easy week)
-    exercises:
-      - { name: Deadlifts, sets: 2, reps: 5, weight: 70 }
-      - { name: Hyperextensions, sets: 2, reps: 12 }
-      - { name: Rows, sets: 3, reps: 8, weight: 42.5 }
-      - { name: Pull Ups, sets: 3, reps: 4 }
-    notes: Pull-ups with chin-up grip
+    type: meditation
 
   - date: 2026-11-17
-    type: run
-    kind: easy
-    distance_km: 7
-    max_hr: 160
-    notes: Finish with 6 x 20 s strides
+    type: meditation
 
   - date: 2026-11-18
-    type: strength
-    title: Legs & core (easy week)
-    exercises:
-      - { name: Squats, sets: 2, reps: 5, weight: 65 }
-      - { name: Lunges, sets: 2, reps: 8, weight: 20 }
-      - { name: Good Mornings, sets: 2, reps: 10, weight: 30 }
-      - { name: Decline Situps, sets: 2, reps: 12 }
-      - { name: Pull Ups, sets: 2, reps: 4 }
+    type: meditation
 
   - date: 2026-11-19
-    type: run
-    kind: easy
-    distance_km: 7
-    max_hr: 160
+    type: meditation
+    notes: Travel day
 
   - date: 2026-11-20
-    type: strength
-    title: Upper body & posture (easy week)
-    exercises:
-      - { name: Incline Bench Press, sets: 2, reps: 8, weight: 40 }
-      - { name: Pull Ups, sets: 1, reps: max }
-      - { name: Preacher Curls, sets: 2, reps: 10, weight: 25 }
-      - { name: Dead Hang, sets: 2, seconds: 30 }
-    notes: Pull-ups is a single max set, a test of your best set after the block. Do it first, fresh, full range
+    type: meditation
+    notes: Travel day
 
   - date: 2026-11-21
-    type: run
-    kind: race
-    title: 5 km time trial
-    distance_km: 9
-    notes: Parkrun or solo on a flat route. 2-3 km warm-up incl. a few strides, 5 km all out but evenly paced (aim for about 5:00/km, faster if it feels good), easy cool-down
+    type: strength
+    title: "Upper body: press & pull"
+    exercises:
+      - { name: Overhead Press, sets: 3, reps: 8, weight: 30 }
+      - { name: Pull Ups, sets: 4, reps: 5 }
+      - { name: Incline Bench Press, sets: 3, reps: 8, weight: 40 }
+      - { name: Preacher Curls, sets: 3, reps: 8, weight: 25 }
+      - { name: Sit Ups, sets: 3, reps: 20 }
+    notes: First session after the injury, keep everything easy. Easy on the ankle, seated or lying only, both feet flat and relaxed. Overhead press seated on the bench. For pull-ups, step down onto the bench, never jump down. Sit-ups with feet free, not hooked under anything. If gripping hurts the hand, stop and make it a meditation day
 
   - date: 2026-11-22
-    type: rest
+    type: meditation
+
+  - date: 2026-11-23
+    type: strength
+    title: "Upper body: back & posture"
+    exercises:
+      - { name: Pull Ups, sets: 3, reps: max }
+      - { name: Chest Supported Rows, sets: 4, reps: 10, weight: 25 }
+      - { name: Dips, sets: 3, reps: 6 }
+      - { name: Dead Hang, sets: 3, seconds: 40 }
+      - { name: Sit Ups, sets: 3, reps: 20 }
+    notes: Easy on the ankle, chest-supported rows lying face down on the incline bench with the SZ bar. After pull-ups and dips, step down onto the bench, never jump down. If gripping hurts the hand, stop and make it a meditation day
+
+  - date: 2026-11-24
+    type: meditation
+
+  - date: 2026-11-25
+    type: strength
+    title: "Upper body: press & pull"
+    exercises:
+      - { name: Overhead Press, sets: 3, reps: 8, weight: 30 }
+      - { name: Pull Ups, sets: 4, reps: 5 }
+      - { name: Incline Bench Press, sets: 3, reps: 8, weight: 40 }
+      - { name: Preacher Curls, sets: 3, reps: 8, weight: 25 }
+      - { name: Sit Ups, sets: 3, reps: 20 }
+    notes: Easy on the ankle, seated or lying only, both feet flat and relaxed. Overhead press seated on the bench. For pull-ups, step down onto the bench, never jump down. Sit-ups with feet free, not hooked under anything. If gripping hurts the hand, stop and make it a meditation day
+
+  - date: 2026-11-26
+    type: meditation
+
+  - date: 2026-11-27
+    type: strength
+    title: "Upper body: back & posture"
+    exercises:
+      - { name: Pull Ups, sets: 3, reps: max }
+      - { name: Chest Supported Rows, sets: 4, reps: 10, weight: 25 }
+      - { name: Dips, sets: 3, reps: 6 }
+      - { name: Dead Hang, sets: 3, seconds: 40 }
+      - { name: Sit Ups, sets: 3, reps: 20 }
+    notes: Easy on the ankle, chest-supported rows lying face down on the incline bench with the SZ bar. After pull-ups and dips, step down onto the bench, never jump down. If gripping hurts the hand, stop and make it a meditation day
+
+  - date: 2026-11-28
+    type: meditation
+
+  - date: 2026-11-29
+    type: strength
+    title: "Upper body: press & pull"
+    exercises:
+      - { name: Overhead Press, sets: 3, reps: 8, weight: 30 }
+      - { name: Pull Ups, sets: 4, reps: 5 }
+      - { name: Incline Bench Press, sets: 3, reps: 8, weight: 40 }
+      - { name: Preacher Curls, sets: 3, reps: 8, weight: 25 }
+      - { name: Sit Ups, sets: 3, reps: 20 }
+    notes: Easy on the ankle, seated or lying only, both feet flat and relaxed. Overhead press seated on the bench. For pull-ups, step down onto the bench, never jump down. Sit-ups with feet free, not hooked under anything. If gripping hurts the hand, stop and make it a meditation day
+
+  - date: 2026-11-30
+    type: meditation

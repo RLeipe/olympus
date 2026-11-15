@@ -80,6 +80,13 @@ export const PulseIcon = props => (
   <Icon {...props}><path d="M2 12h4l3-7 6 14 3-7h4" /></Icon>
 )
 
+export const LotusIcon = props => (
+  <Icon {...props}>
+    <path d="M12 20.5c-3.5 0-7.5-1.5-9-5 3-.8 6 .2 9 3.2 3-3 6-4 9-3.2-1.5 3.5-5.5 5-9 5Z" />
+    <path d="M12 18c-2.2-2-3.2-4.6-2.6-8.3L12 5.5l2.6 4.2c.6 3.7-.4 6.3-2.6 8.3Z" />
+  </Icon>
+)
+
 export const MoonIcon = props => (
   <Icon {...props}><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></Icon>
 )

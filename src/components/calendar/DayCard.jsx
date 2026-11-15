@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { parseISODate } from '../../utils/dates'
 import DayNoteEditor from '../DayNoteEditor'
-import { DumbbellIcon, MoonIcon, NoteIcon, PulseIcon, RunIcon } from '../icons'
+import { DumbbellIcon, LotusIcon, MoonIcon, NoteIcon, PulseIcon, RunIcon } from '../icons'
 import {
   STATUS_STYLES,
   sessionTitle,
@@ -13,7 +13,7 @@ import {
   sportLabel
 } from './format'
 
-const TYPE_ICON = { run: RunIcon, strength: DumbbellIcon, other: PulseIcon, rest: MoonIcon }
+const TYPE_ICON = { run: RunIcon, strength: DumbbellIcon, other: PulseIcon, rest: MoonIcon, meditation: LotusIcon }
 
 // Everything for one day: planned sessions with their outcome, unplanned activities and the day note
 export default function DayCard({ date, day, note, isToday, muted = false, userId, onNoteSaved }) {
@@ -111,6 +111,10 @@ function PlannedSession({ result }) {
   const style = STATUS_STYLES[evaluation.status]
   const movedTo = actual && actual.date !== session.date ? actual.date : null
 
+  if (session.type === 'meditation') {
+    return <MeditationTile title={sessionTitle(session)} actual={actual} movedTo={movedTo} notes={session.notes} />
+  }
+
   if (session.type === 'rest') {
     return (
       <div className={`rounded-xl px-3 py-2.5 ${style.tile}`}>
@@ -201,7 +205,31 @@ function StrengthDetails({ session, evaluation, matched }) {
   )
 }
 
+// Planned meditation days and logged meditations: total minutes and the notes, no status chip
+function MeditationTile({ title = 'Meditation', actual, movedTo, notes }) {
+  const style = STATUS_STYLES[actual ? 'done' : 'open']
+  const day = movedTo && parseISODate(movedTo).toLocaleDateString('en-GB', { weekday: 'short' })
+  return (
+    <div className={`rounded-xl px-3 py-2.5 ${style.tile}`}>
+      <div className="flex items-start justify-between gap-2">
+        <SessionTitle type="meditation" title={title} />
+        {actual && (
+          <span className="text-xs font-bold tabular-nums text-accent-strong whitespace-nowrap">
+            {actual.minutes} min{day ? ` · ${day}` : ''}
+          </span>
+        )}
+      </div>
+      {actual?.entries.filter(e => e.notes).map((e, i) => (
+        <p key={i} className="text-xs text-ink-soft mt-1 pl-6 whitespace-pre-wrap">{e.notes}</p>
+      ))}
+      {notes && <p className="text-xs text-ink-faint italic mt-1 pl-6">{notes}</p>}
+    </div>
+  )
+}
+
 function ExtraSession({ actual }) {
+  if (actual.type === 'meditation') return <MeditationTile actual={actual} />
+
   const style = STATUS_STYLES.extra
   const title = actual.source === 'log'
     ? 'Strength'

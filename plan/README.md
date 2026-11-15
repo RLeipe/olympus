@@ -66,6 +66,9 @@ sessions:
 
   - date: 2026-11-09
     type: rest                # optional; not counted in adherence
+
+  - date: 2026-11-10
+    type: meditation          # no length or instructions on purpose
 ```
 
 Several sessions on the same date are fine. Exercise names must match the names in the
@@ -87,5 +90,7 @@ npm run check-plan
   pace (up to 15 s/km slower still counts, e.g. for a slight uphill) or, without a target
   pace, clearly faster than the run's average count as reps, so record intervals with laps.
 - **Other**: any other Strava activity type.
+- **Meditation**: any meditation logged in the app that day. A meditation day without one is
+  shown neutrally, never as missed: meditation days are an invitation, not a target.
 - A session done one day early or late still counts and is shown as "Done Tue" etc.
 - Anything done without a matching plan entry shows as "Unplanned".

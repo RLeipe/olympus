@@ -1,12 +1,13 @@
 import { NavLink, Link } from 'react-router-dom'
 import { useUser } from '../contexts/UserContext'
-import { Logo, StatsIcon, CalendarIcon, PlusIcon, ScaleIcon } from './icons'
+import { Logo, StatsIcon, CalendarIcon, PlusIcon, ScaleIcon, LotusIcon } from './icons'
 
 const NAV = [
   { to: '/', label: 'Stats', icon: StatsIcon },
   { to: '/calendar', label: 'Calendar', icon: CalendarIcon },
   { to: '/log', label: 'Log', icon: PlusIcon, primary: true },
-  { to: '/bodyweight', label: 'Weight', icon: ScaleIcon }
+  { to: '/bodyweight', label: 'Weight', icon: ScaleIcon },
+  { to: '/meditation', label: 'Meditation', icon: LotusIcon }
 ]
 
 function UserSwitcher() {
@@ -70,7 +71,7 @@ export default function Header() {
 
       {/* Tab bar on phones */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface/90 backdrop-blur-md border-t border-line pb-[env(safe-area-inset-bottom)]">
-        <div className="grid grid-cols-4 h-16">
+        <div className="grid grid-cols-5 h-16">
           {NAV.map(({ to, label, icon: Icon, primary }) => (
             <NavLink
               key={to}

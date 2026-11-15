@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import QuickLog from './pages/QuickLog'
 import BodyWeight from './pages/BodyWeight'
 import Calendar from './pages/Calendar'
+import Meditation from './pages/Meditation'
 
 // Each tab opens at the top instead of keeping the previous page's scroll position
 function ScrollToTop() {
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/log" element={<QuickLog />} />
                 <Route path="/bodyweight" element={<BodyWeight />} />
+                <Route path="/meditation" element={<Meditation />} />
               </Routes>
             </main>
           </div>

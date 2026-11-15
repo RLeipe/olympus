@@ -1,4 +1,4 @@
-// Plan vs. actual: turns logged sets and Strava activities into "actual sessions",
+// Plan vs. actual: turns logged sets, Strava activities and meditations into "actual sessions",
 // matches them to planned sessions and evaluates how well each plan was hit.
 // Pure ES module: used by the app and by scripts/training-snapshot.mjs.
 import { addDays, startOfWeek } from './dates.js'
@@ -14,8 +14,9 @@ const LAP_DISTANCE_TOLERANCE = 0.15
 const LAP_DURATION_TOLERANCE = 0.15
 const LAP_PACE_SLACK_S = 15
 
-// workoutSets: rows with exercises(name, metric_type); activities: rows from the activities table
-export function buildActuals(workoutSets, activities) {
+// workoutSets: rows with exercises(name, metric_type); activities: rows from the activities table;
+// meditations: rows from the meditations table
+export function buildActuals(workoutSets, activities, meditations = []) {
   const items = []
   const strengthByDate = {}
 
@@ -44,6 +45,18 @@ export function buildActuals(workoutSets, activities) {
     items.push({ id: `strava-${activity.strava_id}`, type, source: 'strava', date: activity.activity_date, activity })
   }
 
+  // All meditations of a day form one actual session
+  const meditationByDate = {}
+  for (const row of meditations) {
+    let item = meditationByDate[row.date]
+    if (!item) {
+      item = meditationByDate[row.date] = { id: `meditation-${row.date}`, type: 'meditation', source: 'log', date: row.date, minutes: 0, entries: [] }
+      items.push(item)
+    }
+    item.minutes += row.minutes
+    item.entries.push({ minutes: row.minutes, notes: row.notes || '' })
+  }
+
   return items.sort((a, b) => a.date.localeCompare(b.date))
 }
 
@@ -70,6 +83,8 @@ export function matchPlan(sessions, actuals, todayIso) {
 
 function evaluate({ session, actual }, todayIso) {
   if (session.type === 'rest') return { status: 'rest' }
+  // A meditation day without a meditation is never "missed"
+  if (session.type === 'meditation') return { status: actual ? 'done' : 'open' }
   if (!actual) {
     const status = session.date < todayIso ? 'missed' : session.date === todayIso ? 'today' : 'planned'
     return { status }

@@ -8,6 +8,8 @@ export const STATUS_STYLES = {
   today: { label: 'Today', chip: 'text-ink', tile: 'border border-dashed border-ink-faint/60' },
   planned: { label: 'Planned', chip: 'text-ink-faint border-dashed', tile: 'border border-dashed border-line' },
   rest: { label: 'Rest', chip: 'text-ink-faint', tile: 'bg-sunken/50' },
+  // A meditation day nothing was logged for: no verdict either way
+  open: { label: '', chip: 'text-ink-faint', tile: 'bg-sunken/50' },
   extra: { label: 'Unplanned', chip: 'text-extra', tile: 'bg-sunken shadow-[inset_2px_0_0_rgb(var(--extra))]' }
 }
 
@@ -39,6 +41,7 @@ export function sessionTitle(session) {
   if (session.type === 'run') return RUN_KIND_LABEL[session.kind] || 'Run'
   if (session.type === 'strength') return 'Strength'
   if (session.type === 'rest') return 'Rest'
+  if (session.type === 'meditation') return 'Meditation'
   return 'Session'
 }
 
